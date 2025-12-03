@@ -4,12 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Smart Schedule | النظام المطور</title>
-
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 <link href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-material-ui/material-ui.min.css" rel="stylesheet">
-
 <style>
     :root {
         --primary: #4338ca;
@@ -25,9 +23,7 @@
         --shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
         --radius: 18px;
     }
-
     * { box-sizing: border-box; outline: none; }
-
     body {
         font-family: 'Tajawal', sans-serif;
         background: radial-gradient(circle at top right, #1e1b4b, #312e81, #0f172a);
@@ -39,7 +35,6 @@
         padding: 20px;
         color: var(--text-main);
     }
-
     .container {
         background: rgba(255, 255, 255, 0.96);
         width: 100%;
@@ -155,13 +150,11 @@
     .dashboard { display: none; animation: fadeIn 0.5s; }
     .hidden { display: none; }
 
-    /* Modal for Submissions */
     .submissions-list {
         background: #f8fafc; border: 1px solid #e2e8f0; padding: 15px; border-radius: 12px; margin-top: 15px; max-height: 200px; overflow-y: auto;
     }
     .sub-item { display: flex; justify-content: space-between; padding: 8px; border-bottom: 1px solid #cbd5e1; font-size: 0.9rem; }
 
-    /* Student Info Box */
     .student-info-header {
         background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
         padding: 20px;
@@ -333,7 +326,7 @@
                         <option value="">-- اختر --</option>
                         <script>
                             for(let i=1;i<=13;i++){
-                                document.write(<option value="${i}">سكشن ${i}</option>);
+                                document.write(`<option value="${i}">سكشن ${i}</option>`);
                             }
                         </script>
                     </select>
@@ -377,10 +370,7 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
-// ======================= DATA & SETUP ============================
 
-// قاعدة بيانات الطلاب (من الصورة المرفقة)
-// الكود هو الرقم المتسلسل، السكشن والجروب = 1 للجميع
 const studentsDB = {
     "1": { name: "ابرار حمدي محمد محمد حسن", section: 1, group: 1 },
     "2": { name: "ابراهيم احمد رمضان احمد", section: 1, group: 1 },
@@ -494,7 +484,7 @@ function performLogin(){
 function showStaff(){
     document.getElementById("login-screen").style.display="none";
     document.getElementById("staff-dashboard").style.display="block";
-    document.getElementById("staff-title").innerHTML = أهلاً، <span style="color:var(--primary)">${currentUser.name}</span>;
+    document.getElementById("staff-title").innerHTML = `أهلاً، <span style="color:var(--primary)">${currentUser.name}</span>`;
 
     loadStaffControls();
     renderStaffPosts();
@@ -508,9 +498,9 @@ function loadStaffControls(){
     // Populate drop-downs for Cancel
     let days = new Set();
     currentUser.lectures.forEach(l => days.add(l.day));
-    days.forEach(d => daySel.innerHTML+=<option>${d}</option>);
+    days.forEach(d => daySel.innerHTML+=`<option>${d}</option>`);
     
-    grpSel.innerHTML = <option value="1">جروب 1</option><option value="2">جروب 2</option>;
+    grpSel.innerHTML = `<option value="1">جروب 1</option><option value="2">جروب 2</option>`;
 }
 
 // === خاصية كشف التعارض والوقت ===
@@ -535,7 +525,7 @@ function staffReschedule(){
     let targetGroup = document.getElementById("reschedule-group").value;
 
     if(checkConflict(newDay, newTime, newPlace)){
-        Swal.fire("تعارض!", القاعة ${newPlace} مشغولة يوم ${newDay} الساعة ${newTime}, "error");
+        Swal.fire("تعارض!", `القاعة ${newPlace} مشغولة يوم ${newDay} الساعة ${newTime}`, "error");
         return;
     }
 
@@ -564,7 +554,7 @@ function staffReschedule(){
         id: Date.now(),
         type: "note",
         subject: currentUser.subject,
-        desc: ${msg}: يوم ${newDay} الساعة ${newTime} في ${newPlace},
+        desc: `${msg}: يوم ${newDay} الساعة ${newTime} في ${newPlace}`,
         date: new Date().toISOString().split('T')[0],
         author: currentUser.name
     });
@@ -613,22 +603,22 @@ function renderStaffPosts(){
 
     myPosts.forEach(p=>{
         let labelHTML = "";
-        if(p.type === "quiz") labelHTML = <span class="tag tag-quiz">Quiz</span>;
-        else if(p.type === "task") labelHTML = <span class="tag tag-task">Task</span>;
-        else if(p.type === "exam") labelHTML = <span class="tag tag-exam">Exam</span>;
-        else if(p.type === "cancel") labelHTML = <span class="tag" style="background:#fee2e2; color:red">إلغاء</span>;
+        if(p.type === "quiz") labelHTML = `<span class="tag tag-quiz">Quiz</span>`;
+        else if(p.type === "task") labelHTML = `<span class="tag tag-task">Task</span>`;
+        else if(p.type === "exam") labelHTML = `<span class="tag tag-exam">Exam</span>`;
+        else if(p.type === "cancel") labelHTML = `<span class="tag" style="background:#fee2e2; color:red">إلغاء</span>`;
 
         let subListHTML = "";
         if(p.type === "task") {
             let mySubs = submissions.filter(s => s.taskId === p.id);
             if(mySubs.length > 0) {
-                subListHTML = <div class="submissions-list"><strong><i class="fa-solid fa-file-arrow-down"></i> الاستلامات (${mySubs.length}):</strong>;
+                subListHTML = `<div class="submissions-list"><strong><i class="fa-solid fa-file-arrow-down"></i> الاستلامات (${mySubs.length}):</strong>`;
                 mySubs.forEach(s => {
-                    subListHTML += <div class="sub-item"><span>${s.studentName} (${s.studentId})</span> <span>${s.time}</span></div>;
+                    subListHTML += `<div class="sub-item"><span>${s.studentName} (${s.studentId})</span> <span>${s.time}</span></div>`;
                 });
-                subListHTML += </div>;
+                subListHTML += `</div>`;
             } else {
-                subListHTML = <div style="margin-top:10px; font-size:0.85rem; color:#64748b">لم يتم التسليم من أي طالب بعد</div>;
+                subListHTML = `<div style="margin-top:10px; font-size:0.85rem; color:#64748b">لم يتم التسليم من أي طالب بعد</div>`;
             }
         }
 
@@ -663,7 +653,7 @@ function showStudent(){
     document.getElementById("student-dashboard").style.display="block";
     
     // Set Student Info
-    document.getElementById("stu-title").innerHTML = <i class="fa-solid fa-user-graduate"></i> لوحة الطالب;
+    document.getElementById("stu-title").innerHTML = `<i class="fa-solid fa-user-graduate"></i> لوحة الطالب`;
     document.getElementById("info-stu-name").innerText = currentUser.name;
     document.getElementById("info-stu-sec").innerText = "سكشن " + currentUser.section;
 
@@ -769,12 +759,9 @@ function renderStudentPosts(){
         if(p.type === "task"){
             let isSubmitted = submissions.some(s => s.taskId === p.id && s.studentId === currentUser.id);
             if(isSubmitted){
-                actionBtn = <button class="btn btn-task-submit" disabled><i class="fa-solid fa-check"></i> تم التسليم</button>;
+                actionBtn = `<button class="btn btn-task-submit" disabled><i class="fa-solid fa-check"></i> تم التسليم</button>`;
             } else {
-                actionBtn = <button class="btn btn-task-submit" onclick="submitTask(${p.id})"><i class="fa-solid fa-upload"></i> تسليم المشروع</button>;
-            }
-        }
-        
+                actionBtn = `<button class="btn btn-task-submit" onclick="submitTask(${p.id})"><i class="fa-solid fa-upload"></i> تسليم المشروع</button>`;}}
         box.innerHTML+=`
             <div class="schedule-row" style="border-right-color:${color}">
                 <div style="width:100%">
@@ -794,10 +781,7 @@ function renderStudentPosts(){
                     </div>
                 </div>
             </div>
-        `;
-    });
-}
-
+        `;   });}
 function submitTask(taskId){
     Swal.fire({
         title: 'تأكيد التسليم',
@@ -817,15 +801,13 @@ function submitTask(taskId){
                 studentId: currentUser.id,
                 studentName: currentUser.name,
                 time: timeString
-            });
-            
+            });           
             localStorage.setItem("smart_submissions", JSON.stringify(submissions));
             Swal.fire('تم التسليم!', 'وصل المشروع للدكتور بنجاح.', 'success');
             renderStudentPosts();
         }
     })
 }
-
 function logout(){
     Swal.fire({
         title: 'تسجيل خروج',
@@ -842,7 +824,6 @@ function logout(){
         }
     })
 }
-
 </script>
 </body>
 </html>
