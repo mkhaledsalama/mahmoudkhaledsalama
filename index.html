@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Smart Schedule | النظام المطور</title>
+<title>Smart Schedule | النظام الأكاديمي</title>
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
@@ -101,15 +101,11 @@
     .btn-danger { background: linear-gradient(135deg, #b91c1c, #ef4444); width: auto; padding: 10px 20px; font-size: 0.9rem; border-radius: 10px;}
     .btn-warning { background: linear-gradient(135deg, #d97706, #f59e0b); color: white; }
     
-    .btn-task-submit {
-        background: var(--success);
-        padding: 8px 16px;
-        font-size: 0.9rem;
-        border-radius: 8px;
-        margin-top: 10px;
-        width: auto;
+    .btn-view-file {
+        background: #fff; color: var(--primary); border: 1px solid var(--primary);
+        padding: 5px 15px; font-size: 0.85rem; border-radius: 8px; width: auto; cursor: pointer;
     }
-    .btn-task-submit:disabled { background: #cbd5e1; cursor: not-allowed; transform: none; box-shadow: none; }
+    .btn-view-file:hover { background: var(--primary); color: #fff; }
 
     .btn-logout { background: #f1f5f9; color: #64748b; margin-top: 40px; width: 100%; border: 2px solid #e2e8f0; box-shadow: none;}
     .btn-logout:hover { background: #e2e8f0; color: #ef4444; border-color: #ef4444; }
@@ -117,22 +113,25 @@
     .role-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 25px; margin-top: 30px; }
 
     label { display: block; margin-bottom: 8px; font-weight: 700; color: var(--text-main); font-size: 0.95rem; }
-    input, select {
+    input, select, textarea {
         width: 100%; padding: 18px; border-radius: 14px; border: 2px solid #e2e8f0; background: #f8fafc;
         font-size: 1.05rem; font-family: inherit; transition: 0.3s; margin-bottom: 25px; color: var(--text-main);
     }
-    input:focus, select:focus { border-color: var(--primary); background: white; box-shadow: 0 0 0 4px rgba(67, 56, 202, 0.15); }
+    input:focus, select:focus, textarea:focus { border-color: var(--primary); background: white; box-shadow: 0 0 0 4px rgba(67, 56, 202, 0.15); }
 
     .schedule-row {
         background: white; padding: 24px; border-radius: 16px; margin-bottom: 20px;
-        display: flex; justify-content: space-between; align-items: center;
+        display: flex; flex-direction: column;
         border: 1px solid #f1f5f9; border-right: 6px solid var(--primary);
         box-shadow: 0 4px 6px -2px rgba(0,0,0,0.03); transition: transform 0.2s, box-shadow 0.2s;
         position: relative; overflow: hidden;
     }
     .schedule-row:hover { transform: translateX(-5px); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.08); }
-    .schedule-row div b { font-size: 1.2rem; color: var(--text-main); display: block; margin-bottom: 6px; }
-    .schedule-row div span { font-size: 0.9rem; color: var(--text-sub); }
+    
+    .row-header { display: flex; justify-content: space-between; align-items: flex-start; width: 100%; }
+
+    .schedule-row b { font-size: 1.2rem; color: var(--text-main); display: block; margin-bottom: 6px; }
+    .schedule-row span { font-size: 0.9rem; color: var(--text-sub); }
     
     .meta-info { display: flex; gap: 15px; margin-top: 8px; font-size: 0.9rem; color: #475569; font-weight: 500; }
     .meta-info i { color: var(--secondary); }
@@ -140,6 +139,8 @@
     .cancelled { border-right-color: var(--danger) !important; background: #fef2f2 !important; }
     .cancelled b { text-decoration: line-through; color: #991b1b !important; }
     
+    .online-section { border-right: 5px solid #8b5cf6 !important; background: #f5f3ff !important; }
+    .merged-section { border-right: 5px solid #ec4899 !important; background: #fdf2f8 !important; }
     .modified-time { border-right-color: var(--warning) !important; background: #fffbeb !important; }
 
     .tag { padding: 4px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; margin-right: 10px; }
@@ -151,9 +152,9 @@
     .hidden { display: none; }
 
     .submissions-list {
-        background: #f8fafc; border: 1px solid #e2e8f0; padding: 15px; border-radius: 12px; margin-top: 15px; max-height: 200px; overflow-y: auto;
+        background: #f8fafc; border: 1px solid #e2e8f0; padding: 15px; border-radius: 12px; margin-top: 15px; max-height: 200px; overflow-y: auto; width: 100%;
     }
-    .sub-item { display: flex; justify-content: space-between; padding: 8px; border-bottom: 1px solid #cbd5e1; font-size: 0.9rem; }
+    .sub-item { display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #cbd5e1; font-size: 0.9rem; margin-bottom: 5px; background: #fff; border-radius: 8px; }
 
     .student-info-header {
         background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
@@ -167,6 +168,13 @@
     }
     .student-info-header h4 { margin: 0; color: #0284c7; font-size: 1.1rem; }
     .student-info-header p { margin: 5px 0 0; color: #1e293b; font-weight: bold; font-size: 1.3rem; }
+
+    .upload-area {
+        border: 2px dashed #cbd5e1; padding: 20px; text-align: center; border-radius: 14px;
+        cursor: pointer; background: #f8fafc; transition: 0.3s; margin-top: 15px;
+    }
+    .upload-area:hover { border-color: var(--primary); background: #eef2ff; }
+    .done-badge { background: var(--success); color: white; padding: 8px 20px; border-radius: 20px; display: inline-block; font-weight: bold; margin-top: 10px; }
 
     @media (min-width: 768px) {
         .container { padding: 60px; }
@@ -224,6 +232,23 @@
 
         <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap:30px;">
             
+            <div id="assistant-status-card" class="hidden" style="background: #fff; padding:30px; border-radius:20px; border:1px solid #e2e8f0; box-shadow:0 10px 15px -3px rgba(0,0,0,0.05); border-right: 5px solid #8b5cf6;">
+                <h3 style="color:#7c3aed"><i class="fa-solid fa-toggle-on"></i> حالة السكشن</h3>
+                <label>تحديد الحالة:</label>
+                <select id="section-status-type">
+                    <option value="Offline">في الكلية (Offline)</option>
+                    <option value="Online">أونلاين (عن بعد)</option>
+                    <option value="Cancelled">ملغي</option>
+                </select>
+                <label>للجروب/السكشن:</label>
+                <select id="status-group">
+                    <script>
+                        for(let i=1;i<=13;i++) document.write(`<option value="${i}">${i}</option>`);
+                    </script>
+                </select>
+                <button class="btn" style="background:#8b5cf6; width:100%" onclick="updateSectionStatus()">تحديث الحالة</button>
+            </div>
+
             <div style="background: #fff; padding:30px; border-radius:20px; border:1px solid #e2e8f0; box-shadow:0 10px 15px -3px rgba(0,0,0,0.05);">
                 <h3 style="color:var(--danger);"><i class="fa-solid fa-ban"></i> إلغاء محاضرة</h3>
                 <label>اختر اليوم:</label>
@@ -234,46 +259,26 @@
             </div>
 
             <div style="background: #fff; padding:30px; border-radius:20px; border:1px solid #e2e8f0; box-shadow:0 10px 15px -3px rgba(0,0,0,0.05);">
-                <h3 style="color:var(--warning);"><i class="fa-solid fa-clock-rotate-left"></i> تعديل / ضم المجموعات</h3>
-                
+                <h3 style="color:var(--warning);"><i class="fa-solid fa-clock-rotate-left"></i> تعديل / ضم</h3>
                 <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
                     <div>
-                        <label>اليوم الجديد:</label>
+                        <label>اليوم:</label>
                         <select id="reschedule-day">
                             <option>السبت</option><option>الأحد</option><option>الاثنين</option><option>الثلاثاء</option><option>الأربعاء</option><option>الخميس</option><option>الجمعة</option>
                         </select>
                     </div>
                     <div>
-                        <label>الوقت (9ص - 5م):</label>
-                        <select id="reschedule-time">
-                            <option value="09:00">09:00 AM</option>
-                            <option value="10:00">10:00 AM</option>
-                            <option value="11:00">11:00 AM</option>
-                            <option value="12:00">12:00 PM</option>
-                            <option value="13:00">01:00 PM</option>
-                            <option value="14:00">02:00 PM</option>
-                            <option value="15:00">03:00 PM</option>
-                            <option value="16:00">04:00 PM</option>
-                            <option value="17:00">05:00 PM</option>
-                        </select>
+                        <label>الوقت:</label>
+                        <input type="time" id="reschedule-time">
                     </div>
                 </div>
-
                 <label>القاعة / المدرج:</label>
-                <select id="reschedule-place">
-                    <option value="A NEW">A NEW</option>
-                    <option value="G201">G201</option>
-                    <option value="G202">G202</option>
-                    <option value="F">F</option>
-                </select>
-
+                <input type="text" id="reschedule-place" placeholder="المكان الجديد...">
                 <label>الجروب المستهدف:</label>
                 <select id="reschedule-group">
-                    <option value="1">جروب 1 فقط</option>
-                    <option value="2">جروب 2 فقط</option>
-                    <option value="both">ضم المجموعتين معاً</option>
+                    <option value="1">جروب 1</option>
+                    <option value="2">جروب 2</option>
                 </select>
-
                 <button class="btn btn-warning" onclick="staffReschedule()" style="width:100%; margin-top:10px; color:white;">حفظ التعديل</button>
             </div>
 
@@ -281,20 +286,20 @@
                 <h3><i class="fa-solid fa-pen-nib"></i> إضافة تنبيه / تكليف</h3>
                 <div style="display:grid; grid-template-columns: 1fr 2fr; gap:15px;">
                     <select id="task-type">
-                        <option value="task">تاسك (تسليم مشروع)</option>
+                        <option value="task">تاسك (تسليم ملف)</option>
                         <option value="quiz">كويز (Quiz)</option>
                         <option value="exam">امتحان</option>
                         <option value="note">تنويه عام</option>
                     </select>
                     <input id="task-date" type="date">
                 </div>
-                <input id="task-desc" placeholder="اكتب تفاصيل التنبيه بوضوح...">
+                <textarea id="task-desc" rows="2" placeholder="اكتب تفاصيل التنبيه بوضوح..."></textarea>
                 <button class="btn btn-submit" onclick="staffAddTask()" style="background:var(--secondary); margin-top:0;">نشر فوراً</button>
             </div>
         </div>
 
         <div style="margin-top: 50px;">
-            <h3><i class="fa-solid fa-list-check"></i> النشاطات والتسليمات</h3>
+            <h3><i class="fa-solid fa-list-check"></i> المنشورات والتسليمات الحالية</h3>
             <div id="staff-posts"></div>
         </div>
 
@@ -320,17 +325,7 @@
         <div style="background: #fff; padding:30px; border-radius:20px; margin-bottom:40px; border:1px solid #e2e8f0; box-shadow:0 10px 15px -3px rgba(0,0,0,0.05);">
             <div class="role-grid" style="margin-top:0;">
                 
-                <div id="section-selector-container" style="display:none;">
-                    <label>رقم السكشن:</label>
-                    <select id="stu-section" onchange="updateStudentSchedule()">
-                        <option value="">-- اختر --</option>
-                        <script>
-                            for(let i=1;i<=13;i++){
-                                document.write(`<option value="${i}">سكشن ${i}</option>`);
-                            }
-                        </script>
-                    </select>
-                </div>
+                <input type="hidden" id="stu-section">
 
                 <div style="grid-column: 1 / -1;">
                     <label style="text-align:center; font-size:1.1rem; margin-bottom:15px;">اختر اليوم لعرض الجدول والمهام:</label>
@@ -348,7 +343,7 @@
             </div>
         </div>
 
-        <h3><i class="fa-regular fa-calendar-days"></i> جدول المحاضرات</h3>
+        <h3><i class="fa-regular fa-calendar-days"></i> جدول المحاضرات والسكاشن</h3>
         <div id="stu-schedule">
             <div style="text-align:center; padding:40px; background:#f8fafc; border-radius:16px; border:2px dashed #cbd5e1;">
                 <i class="fa-solid fa-hand-pointer" style="font-size:2rem; color:#cbd5e1; margin-bottom:10px;"></i>
@@ -370,51 +365,513 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
-
+// ======================= قاعدة بيانات الطلاب (كاملة) =======================
 const studentsDB = {
-    "1": { name: "ابرار حمدي محمد محمد حسن", section: 1, group: 1 },
-    "2": { name: "ابراهيم احمد رمضان احمد", section: 1, group: 1 },
-    "3": { name: "ابراهيم عبد الناصر ابراهيم عبد اللطيف", section: 1, group: 1 },
-    "4": { name: "ابراهيم فاروق ابراهيم احمد", section: 1, group: 1 },
-    "5": { name: "ابراهيم مجدى محمد كامل عبد المقصود", section: 1, group: 1 },
-    "6": { name: "ابراهيم محمد محمد حلاوة", section: 1, group: 1 },
-    "7": { name: "احمد مدحت محمد عبد الخالق", section: 1, group: 1 },
-    "8": { name: "احمد اشرف عوف محمد عوف", section: 1, group: 1 },
-    "9": { name: "احمد اكرامى محمود عبد الحميد", section: 1, group: 1 },
-    "10": { name: "احمد ايمن فاروق عبد الغفار", section: 1, group: 1 },
-    "11": { name: "احمد ايمن نبيل ابراهيم متولى", section: 1, group: 1 },
-    "12": { name: "احمد ايهاب محمد عمران ابراهيم", section: 1, group: 1 },
-    "13": { name: "احمد بلال اسماعيل عبد الرحمن", section: 1, group: 1 },
-    "14": { name: "احمد جمعه محمد بسيوني حسن", section: 1, group: 1 },
-    "15": { name: "احمد حماده احمد عبد السلام", section: 1, group: 1 },
-    "16": { name: "احمد حمدى مسعود على عمار", section: 1, group: 1 },
-    "17": { name: "احمد خالد احمد محمد شحاته", section: 1, group: 1 },
-    "18": { name: "احمد خالد عصران خميس مصطفى", section: 1, group: 1 },
-    "19": { name: "احمد ربيع ابراهيم شحاته", section: 1, group: 1 },
-    "20": { name: "احمد سامى سعيد حسن", section: 1, group: 1 },
-    "21": { name: "احمد سعد محمد عبد الكريم", section: 1, group: 1 },
-    "22": { name: "احمد سعيد صابر سارى", section: 1, group: 1 },
-    "23": { name: "احمد صابر خليل احمد", section: 1, group: 1 },
-    "24": { name: "احمد صابر بكرى محمد عمران", section: 1, group: 1 },
-    "25": { name: "احمد عبد الرحمن دسوقي ابراهيم", section: 1, group: 1 },
-    "26": { name: "احمد عبدالله امين متولى", section: 1, group: 1 },
-    "27": { name: "احمد علاء السيد حسن داود", section: 1, group: 1 },
-    "28": { name: "احمد علاء الدين محمد حسن", section: 1, group: 1 },
-    "29": { name: "احمد عمرو احمد عبد الحميد", section: 1, group: 1 },
-    "30": { name: "احمد عمرو مصطفى حسن الشويخ", section: 1, group: 1 },
-    "31": { name: "احمد عويضه احمد عويضه", section: 1, group: 1 },
-    "32": { name: "احمد محمد احمد عواد مبروك", section: 1, group: 1 },
-    "33": { name: "احمد محمد البدرى فكرى عوض", section: 1, group: 1 },
-    "34": { name: "احمد محمد السيد سلطان", section: 1, group: 1 },
-    "35": { name: "احمد محمد رشاد على", section: 1, group: 1 },
-    "36": { name: "احمد محمد سيد حافظ عبد الغنى", section: 1, group: 1 },
-    "37": { name: "احمد محمد عبد المنعم محمد خليل", section: 1, group: 1 },
-    "38": { name: "احمد محمد محمد محمد", section: 1, group: 1 },
-    "39": { name: "احمد محمد محمد محمود", section: 1, group: 1 },
-    "40": { name: "احمد محمود السيد عبد اللطيف", section: 1, group: 1 }
-};
+    "2000": { name: "ابرار حمدي محمد محمد حسن", section: 1, group: 1 },
+    "2001": { name: "ابراهيم احمد رمضان احمد", section: 1, group: 1 },
+    "2002": { name: "ابراهيم عبد الناصر ابراهيم عبد اللطيف", section: 1, group: 1 },
+    "2003": { name: "ابراهيم فاروق ابراهيم احمد", section: 1, group: 1 },
+    "2004": { name: "ابراهيم مجدى محمد كامل عبد المقصود", section: 1, group: 1 },
+    "2005": { name: "ابراهيم محمد محمد حلاوة", section: 1, group: 1 },
+    "2006": { name: "احمد مدحت محمد عبد الخالق", section: 1, group: 1 },
+    "2007": { name: "احمد اشرف عوف محمد عوف", section: 1, group: 1 },
+    "2008": { name: "احمد اكرامى محمود عبد الحميد", section: 1, group: 1 },
+    "2009": { name: "احمد ايمن فاروق عبد الغفار", section: 1, group: 1 },
+    "2010": { name: "احمد ايمن نبيل ابراهيم متولى", section: 1, group: 1 },
+    "2011": { name: "احمد ايهاب محمد عمران ابراهيم", section: 1, group: 1 },
+    "2012": { name: "احمد بلال اسماعيل عبد الرحمن", section: 1, group: 1 },
+    "2013": { name: "احمد جمعه محمد بسيوني حسن", section: 1, group: 1 },
+    "2014": { name: "احمد حماده احمد عبد السلام", section: 1, group: 1 },
+    "2015": { name: "احمد حمدى مسعود على عمار", section: 1, group: 1 },
+    "2016": { name: "احمد خالد احمد محمد شحاته", section: 1, group: 1 },
+    "2017": { name: "احمد خالد عصران خميس مصطفى", section: 1, group: 1 },
+    "2018": { name: "احمد ربيع ابراهيم شحاته", section: 1, group: 1 },
+    "2019": { name: "احمد سامى سعيد حسن", section: 1, group: 1 },
+    "2020": { name: "احمد سعد محمد عبد الكريم", section: 1, group: 1 },
+    "2021": { name: "احمد سعيد صابر سارى", section: 1, group: 1 },
+    "2022": { name: "احمد صابر خليل احمد", section: 1, group: 1 },
+    "2023": { name: "احمد صابر بكرى محمد عمران", section: 1, group: 1 },
+    "2024": { name: "احمد عبد الرحمن دسوقي ابراهيم", section: 1, group: 1 },
+    "2025": { name: "احمد عبدالله امين متولى", section: 1, group: 1 },
+    "2026": { name: "احمد علاء السيد حسن داود", section: 1, group: 1 },
+    "2027": { name: "احمد علاء الدين محمد حسن", section: 1, group: 1 },
+    "2028": { name: "احمد عمرو احمد عبد الحميد", section: 1, group: 1 },
+    "2029": { name: "احمد عمرو مصطفى حسن الشويخ", section: 1, group: 1 },
+    "2030": { name: "احمد عويضه احمد عويضه", section: 1, group: 1 },
+    "2031": { name: "احمد محمد احمد عواد مبروك", section: 1, group: 1 },
+    "2032": { name: "احمد محمد البدرى فكرى عوض", section: 1, group: 1 },
+    "2033": { name: "احمد محمد السيد سلطان", section: 1, group: 1 },
+    "2034": { name: "احمد محمد رشاد على", section: 1, group: 1 },
+    "2035": { name: "احمد محمد سيد حافظ عبد الغنى", section: 1, group: 1 },
+    "2036": { name: "احمد محمد عبد المنعم محمد خليل", section: 1, group: 1 },
+    "2037": { name: "احمد محمد محمد محمد", section: 1, group: 1 },
+    "2038": { name: "احمد محمد محمد محمود", section: 1, group: 1 },
+    "2039": { name: "احمد محمود السيد عبد اللطيف", section: 1, group: 1 },
+    "2040": { name: "احمد محمود محمد عطايا عوده", section: 2, group: 1 },
+    "2041": { name: "احمد محمود محمد عطايا عوده", section: 2, group: 1 },
+    "2042": { name: "احمد محمود مرسی محمود", section: 2, group: 1 },
+    "2043": { name: "احمد مدحت سعيد على محمد المصرى", section: 2, group: 1 },
+    "2044": { name: "احمد مصطفى احمد محمود صالح", section: 2, group: 1 },
+    "2045": { name: "احمد مصطفى محمد احمد سید", section: 2, group: 1 },
+    "2046": { name: "احمد هشام حسن مجاهد", section: 2, group: 1 },
+    "2047": { name: "ادهم محمد عبد الحميد احمد ابراهيم", section: 2, group: 1 },
+    "2048": { name: "ادهم هشام فوزی محمد", section: 2, group: 1 },
+    "2049": { name: "اروى عصام الحسيني ابراهيم", section: 2, group: 1 },
+    "2050": { name: "اريج محمد عاصم حسن عيد", section: 2, group: 1 },
+    "2051": { name: "اسامه محمد اسماعيل محمد على", section: 2, group: 1 },
+    "2052": { name: "اسراء سيد احمد على", section: 2, group: 1 },
+    "2053": { name: "اسراء محمد فتحى ابراهيم ابراهيم", section: 2, group: 1 },
+    "2054": { name: "اسلام الدسوقي عبد المرضى حسب النبي", section: 2, group: 1 },
+    "2055": { name: "اسلام شادی عثمان ابوزید", section: 2, group: 1 },
+    "2056": { name: "اسلام عماد محمود مصطفى احمد", section: 2, group: 1 },
+    "2057": { name: "اسلام محسن حنفی محمود احمد", section: 2, group: 1 },
+    "2058": { name: "اسلام نصر الدين سمير محمود عبدالعال", section: 2, group: 1 },
+    "2059": { name: "اسماء صلاح ثابت شحاته", section: 2, group: 1 },
+    "2060": { name: "اسماء هاني سعد عميش", section: 2, group: 1 },
+    "2061": { name: "اشرف مصطفى سعيد مسعود", section: 2, group: 1 },
+    "2062": { name: "امان هشام محمود الدسوقي أحمد", section: 2, group: 1 },
+    "2063": { name: "امنيه ابراهيم جلال عبد القادر سيد احمد", section: 2, group: 1 },
+    "2064": { name: "امير محمد العربي محمد عوض", section: 2, group: 1 },
+    "2065": { name: "امیره صلاح طوخی عبد الظاهر الطوخي", section: 2, group: 1 },
+    "2066": { name: "امینه اسامه محمد احمد السيد", section: 2, group: 1 },
+    "2067": { name: "امينه صلاح رزق السيد جمعه الزميتي", section: 2, group: 1 },
+    "2068": { name: "انجي ماجد عطا متى رمسه", section: 2, group: 1 },
+    "2069": { name: "اندريا مجدى دانیال عجیب قسطنجی", section: 2, group: 1 },
+    "2070": { name: "انس احمد ابراهیم احمد دبشه", section: 2, group: 1 },
+    "2071": { name: "انس محمد الراعي احمد سالم", section: 2, group: 1 },
+    "2072": { name: "انس وائل رمضان ابراهيم عباس", section: 2, group: 1 },
+    "2073": { name: "انطوني ماجد عادل سامی", section: 2, group: 1 },
+    "2074": { name: "انور ایمن انور محمد", section: 2, group: 1 },
+    "2075": { name: "ايات حمیده عبد الغني عبد الحميد", section: 2, group: 1 },
+    "2076": { name: "اياد المتولى غازى المتولى حامد", section: 2, group: 1 },
+    "2077": { name: "ایمان احمد عبدالله على", section: 2, group: 1 },
+    "2078": { name: "ایمان سيد شحتة سيد", section: 2, group: 1 },
+    "2079": { name: "ايناس فتحى عثمان عبدالوهاب", section: 2, group: 1 },
+    "2080": { name: "ايه احمد عبدالله احمد فرج", section: 2, group: 1 },
+    "2081": { name: "ايه امبابی محمد امبابی عامر", section: 3, group: 1 },
+    "2082": { name: "ايه عيد ابراهيم كمال حسن", section: 3, group: 1 },
+    "2083": { name: "باسل احمد عبد اللاه ابراهيم حسنين", section: 3, group: 1 },
+    "2084": { name: "باسل أحمد عيد عيد بكر", section: 3, group: 1 },
+    "2085": { name: "باسم سامي ابو سريع دسوقي حسين", section: 3, group: 1 },
+    "2086": { name: "باسم وائل مدحت محمد رشاد", section: 3, group: 1 },
+    "2087": { name: "بدر تامر السيد عبد الجليل أيوب", section: 3, group: 1 },
+    "2088": { name: "بدور حسن على حسن على", section: 3, group: 1 },
+    "2089": { name: "بسملة محمد مجاهد مجاهد", section: 3, group: 1 },
+    "2090": { name: "بسملة محمد محمد عيد السيد", section: 3, group: 1 },
+    "2091": { name: "بسملة مدحت محمود السيد محمد", section: 3, group: 1 },
+    "2092": { name: "بسمله جمال أبو العنين محمد", section: 3, group: 1 },
+    "2093": { name: "بسمله محمد سيد عبد الرحمن حسن", section: 3, group: 1 },
+    "2094": { name: "بسمله محمود محمد نادی حسین", section: 3, group: 1 },
+    "2095": { name: "بسمله هاني محمود محمد", section: 3, group: 1 },
+    "2096": { name: "بسمه عبدون بشير محمود احمد", section: 3, group: 1 },
+    "2097": { name: "بسنت حسن رمضان عبد الله", section: 3, group: 1 },
+    "2098": { name: "بسنت كامل يحيي كامل", section: 3, group: 1 },
+    "2099": { name: "بطرس غالى تادرس نصيف", section: 3, group: 1 },
+    "2100": { name: "بلال عامر محمود حسانين سليم", section: 3, group: 1 },
+    "2101": { name: "بلال محمد صبحی بدر", section: 3, group: 1 },
+    "2102": { name: "بلال محمد عبد الغني محمد", section: 3, group: 1 },
+    "2103": { name: "بلال يوسف يوسف عرفه", section: 3, group: 1 },
+    "2104": { name: "بنان صفوت السيد زاهر الخباز", section: 3, group: 1 },
+    "2105": { name: "بيشوى عفت فرح ماكين", section: 3, group: 1 },
+    "2106": { name: "تبارك عبد المنعم احمد عبد المنعم على", section: 3, group: 1 },
+    "2107": { name: "ثابت سلیمان ثابت سليمان محمد", section: 3, group: 1 },
+    "2108": { name: "جابر فارس نفيلي عبد الخالق", section: 3, group: 1 },
+    "2109": { name: "جاسر محمد تونسی کامل", section: 3, group: 1 },
+    "2110": { name: "جاسمين محمد حسین عثمان", section: 3, group: 1 },
+    "2111": { name: "جمال عصام صابر عبد الله", section: 3, group: 1 },
+    "2112": { name: "جمعه طارق جمعه احمد جنیدی", section: 3, group: 1 },
+    "2113": { name: "جنا سيد على خليل على", section: 3, group: 1 },
+    "2114": { name: "جنا هشام احمد سباعی", section: 3, group: 1 },
+    "2115": { name: "جنى ياسر عبدالله ابراهيم حسن", section: 3, group: 1 },
+    "2116": { name: "جودي محمد أحمد عبد الرحمن", section: 3, group: 1 },
+    "2117": { name: "جودي محمد عمر الفاروق شحاته", section: 3, group: 1 },
+    "2118": { name: "جون رفعت ظريف عطا", section: 3, group: 1 },
+    "2119": { name: "جونیر میخائیل موسی ابراهیم موسی", section: 3, group: 1 },
+    "2120": { name: "جیسی ايهاب فايق عبد الله", section: 3, group: 1 },
+    "2121": { name: "حازم ولید محمد توفيق عبد الله", section: 4, group: 1 },
+    "2122": { name: "حامد خالد حامد السيد موسى", section: 4, group: 1 },
+    "2123": { name: "حبيبة محمد ممدوح محمد", section: 4, group: 1 },
+    "2124": { name: "حبيبه حمدى حسن بشیر", section: 4, group: 1 },
+    "2125": { name: "حبیبه رفاعی فاروق سيد عبدالله", section: 4, group: 1 },
+    "2126": { name: "حبيبه سمير عبد الحميد ابراهيم", section: 4, group: 1 },
+    "2127": { name: "حبيبه صبحي صالح محمد خالد", section: 4, group: 1 },
+    "2128": { name: "حبيبه عمرو عثمان رجب عثمان", section: 4, group: 1 },
+    "2129": { name: "حبيبه محمد السعيد احمد قرنی احمد", section: 4, group: 1 },
+    "2130": { name: "حسن احمد فؤاد محمود امین", section: 4, group: 1 },
+    "2131": { name: "حسن فتحى عمر محمد عبد الواحد", section: 4, group: 1 },
+    "2132": { name: "حسین حازم محمد عبد الفتاح", section: 4, group: 1 },
+    "2133": { name: "حسین مصطفى حسين على على", section: 4, group: 1 },
+    "2134": { name: "حنان على ابو الفتوح", section: 4, group: 1 },
+    "2135": { name: "حنين تامر محمد عبد المعز", section: 4, group: 1 },
+    "2136": { name: "حنين محمد محمود عبد المجيد حجازی", section: 4, group: 1 },
+    "2137": { name: "خالد حسني محمد عبد المقصود حسبو", section: 4, group: 1 },
+    "2138": { name: "خدیجه عبد السلام ابراهيم احمد ابراهيم", section: 4, group: 1 },
+    "2139": { name: "خديجه عبد العزيز عبد الحميد على", section: 4, group: 1 },
+    "2140": { name: "داليا محمد أبوسيف عبد اللطيف درويش", section: 4, group: 1 },
+    "2141": { name: "دانه حازم برهان الدين السيد محمد", section: 4, group: 1 },
+    "2142": { name: "دعاء عبد الرحمن حسنى عبد الرحمن على", section: 4, group: 1 },
+    "2143": { name: "دعاء عبد العال مصطفى عبد السميع", section: 4, group: 1 },
+    "2144": { name: "ديفيد سامی نبیه خلیل جرجس", section: 4, group: 1 },
+    "2145": { name: "دينار انور كمال عبدالحی محمد", section: 4, group: 1 },
+    "2146": { name: "رامز هاني البرنس مهني عبد العال", section: 4, group: 1 },
+    "2147": { name: "ربيع ناصر راضی حافظ", section: 4, group: 1 },
+    "2148": { name: "رتاج عبد الحكيم احمد احمد يوسف", section: 4, group: 1 },
+    "2149": { name: "رحمة ابراهيم محمد ابراهيم محمد", section: 4, group: 1 },
+    "2150": { name: "رحمة محمود أحمد سيد طه", section: 4, group: 1 },
+    "2151": { name: "رضوى السيد عبد النعيم عبد الرحيم", section: 4, group: 1 },
+    "2152": { name: "رضوي محمد محمود على", section: 4, group: 1 },
+    "2153": { name: "رغده مصطفي فتحي عبد العظيم", section: 4, group: 1 },
+    "2154": { name: "رقيه محمد سمير محمد تهامی", section: 4, group: 1 },
+    "2155": { name: "رقيه مصطفى السيد احمد سليمان", section: 4, group: 1 },
+    "2156": { name: "رمضان محمد رمضان محمد", section: 4, group: 1 },
+    "2157": { name: "رنا طارق سمير عبد العزيز", section: 4, group: 1 },
+    "2158": { name: "روان رضا احمد تامر عبد الرازق", section: 4, group: 1 },
+    "2159": { name: "روان عبد المجيد حسن اسماعيل حسن", section: 4, group: 1 },
+    "2160": { name: "روان علاء محمد عبد الفتاح", section: 4, group: 1 },
+    "2161": { name: "روان محمد رفعت کامل سید", section: 5, group: 1 },
+    "2162": { name: "روبرت عزت حنفی شنوده", section: 5, group: 1 },
+    "2163": { name: "روفان صلاح فتحى موسى حسين", section: 5, group: 1 },
+    "2164": { name: "رومانی عبدالله ملاك عزيز", section: 5, group: 1 },
+    "2165": { name: "روناء عادل عبد الحميد حسن سالم", section: 5, group: 1 },
+    "2166": { name: "رويدا انور ربيع احمد", section: 5, group: 1 },
+    "2167": { name: "رؤى اشرف محمد محمد الجندي", section: 5, group: 1 },
+    "2168": { name: "رؤى مصطفى عبد العال السمان محمد", section: 5, group: 1 },
+    "2169": { name: "رؤى منصور دسوقي على", section: 5, group: 1 },
+    "2170": { name: "رؤيا احمد على محمد على", section: 5, group: 1 },
+    "2171": { name: "ريم ناصر محمد احمد يوسف", section: 5, group: 1 },
+    "2172": { name: "ريناد عبد الحكيم أحمد أحمد يوسف", section: 5, group: 1 },
+    "2173": { name: "زهراء محسن محمد عبد اللطيف", section: 5, group: 1 },
+    "2174": { name: "زهرة أسامة محمد العوضي", section: 5, group: 1 },
+    "2175": { name: "زياد احمد عبد المعبود صديق ابراهيم", section: 5, group: 1 },
+    "2176": { name: "زياد السيد عبد المحسن محمد نصر الدين", section: 5, group: 1 },
+    "2177": { name: "زياد تامر فتحى احمد الفطاطري", section: 5, group: 1 },
+    "2178": { name: "زياد صلاح عربي عطيه عليوه", section: 5, group: 1 },
+    "2179": { name: "زياد غريب فهمي احمد", section: 5, group: 1 },
+    "2180": { name: "زياد مجدى محمد سید قرنی", section: 5, group: 1 },
+    "2181": { name: "زياد محسن محمد احمد عبد الجواد", section: 5, group: 1 },
+    "2182": { name: "زياد محمد احمد البدوى سعد الدين على", section: 5, group: 1 },
+    "2183": { name: "زياد محمد احمد محمد البهنساوي", section: 5, group: 1 },
+    "2184": { name: "زياد محمد عبد المنعم محمود", section: 5, group: 1 },
+    "2185": { name: "زياد محمد مصطفى بركات", section: 5, group: 1 },
+    "2186": { name: "زياد محمود محمد عبد الغني احمد", section: 5, group: 1 },
+    "2187": { name: "زياد مصطفى السيد محمد", section: 5, group: 1 },
+    "2188": { name: "زياده رضا سید عبد الحميد", section: 5, group: 1 },
+    "2189": { name: "سارة عوض عزيز الدين شاهين ابو الحسن", section: 5, group: 1 },
+    "2190": { name: "ساره سعيد احمد فرج شمس الدين", section: 5, group: 1 },
+    "2191": { name: "ساره سمير على عبد الحميد احمد", section: 5, group: 1 },
+    "2192": { name: "ساره عادل جاد موسی", section: 5, group: 1 },
+    "2193": { name: "ساره محمد محمد سلیمان", section: 5, group: 1 },
+    "2194": { name: "سجى سيد عبد النعيم هريدي عطيفي", section: 5, group: 1 },
+    "2195": { name: "سلفيا شنوده سعد فوزی", section: 5, group: 1 },
+    "2196": { name: "سلمى ابو الحسن احمد محمد", section: 5, group: 1 },
+    "2197": { name: "سلمى سمير محمد عبد المقصود", section: 5, group: 1 },
+    "2198": { name: "سلمى عبد المجيد محمد عبد المجيد صالح", section: 5, group: 1 },
+    "2199": { name: "سلمى محمد شوقى عبد المنعم على", section: 5, group: 1 },
+    "2200": { name: "سلمى محمود احمد محمد", section: 5, group: 1 },
+    "2201": { name: "سلمى محمود سعيد احمد محمد عثمان", section: 6, group: 1 },
+    "2202": { name: "سلمى محمود علی عبدالهادی فوده", section: 6, group: 1 },
+    "2203": { name: "سما احمد رجب عبد الرحمن", section: 6, group: 1 },
+    "2204": { name: "سما اشرف عبد الهادي على", section: 6, group: 1 },
+    "2205": { name: "سما عمرو عبد الرحمن سعد السيد", section: 6, group: 1 },
+    "2206": { name: "سما محمد سید مصطفی سلیم", section: 6, group: 1 },
+    "2207": { name: "سما محمود محمد عبد الله مبارك", section: 6, group: 1 },
+    "2208": { name: "سمر محمد محمد سید احمد", section: 6, group: 1 },
+    "2209": { name: "سمير طارق احمد صالح", section: 6, group: 1 },
+    "2210": { name: "سميه مهنى عبد العليم مصطفى على", section: 6, group: 1 },
+    "2211": { name: "سندس أحمد حامد الشافعي", section: 6, group: 1 },
+    "2212": { name: "سوسن ابراهیم فرج ابراهيم عبد الوهاب", section: 6, group: 1 },
+    "2213": { name: "سيف الدين احمد هاشم احمد", section: 6, group: 1 },
+    "2214": { name: "سيف الدين رضا کامل محمد سالم", section: 6, group: 1 },
+    "2215": { name: "سيف الله هاني بشير بحر", section: 6, group: 1 },
+    "2216": { name: "سيف رابح محمود ابراهيم محمد السيسي", section: 6, group: 1 },
+    "2217": { name: "سيف محمد على على", section: 6, group: 1 },
+    "2218": { name: "شادی محمد سید ابو العلا عبد العزيز", section: 6, group: 1 },
+    "2219": { name: "شروق حسانی مغربی سلیمان", section: 6, group: 1 },
+    "2220": { name: "شروق طارق خميس رضوان شاور", section: 6, group: 1 },
+    "2221": { name: "شروق محمد حنفى احمد محمد الاسناوى", section: 6, group: 1 },
+    "2222": { name: "شروق محمد عبد المنعم محمود", section: 6, group: 1 },
+    "2223": { name: "شهد احمد عبد الخالق مصطفى", section: 6, group: 1 },
+    "2224": { name: "شهد السيد احمد عبد الرحيم محمد", section: 6, group: 1 },
+    "2225": { name: "شهد حربي فخري محمد عوض", section: 6, group: 1 },
+    "2226": { name: "شهد حسن على خليفه", section: 6, group: 1 },
+    "2227": { name: "شهد عاطف أحمد جاد محمد", section: 6, group: 1 },
+    "2228": { name: "شهد عبد الغفار سيد عبد الغفار", section: 6, group: 1 },
+    "2229": { name: "شهد علاء الدين عبد المنعم شريف أبو العلا", section: 6, group: 1 },
+    "2230": { name: "شهد محمد سعد الدين رضوان احمد", section: 6, group: 1 },
+    "2231": { name: "شهد مسعد السيد محمد عبد الله", section: 6, group: 1 },
+    "2232": { name: "شهد نصار احمد عبد الملك احمد", section: 6, group: 1 },
+    "2233": { name: "صلاح الدين سعيد فاروق احمد", section: 6, group: 1 },
+    "2234": { name: "ضحى ابراهيم حسن ابراهیم", section: 6, group: 1 },
+    "2235": { name: "ضحى خالد محمد سيد", section: 6, group: 1 },
+    "2236": { name: "ضحى ياسر رشاد عبد الحمید نوار", section: 6, group: 1 },
+    "2237": { name: "ضياء صبحي محمد صابر صالح", section: 6, group: 1 },
+    "2238": { name: "طارق غريب جاد الرب عبد المجيد طلب", section: 6, group: 1 },
+    "2239": { name: "عادل احمد ضيف الله ربيع محمود", section: 6, group: 1 },
+    "2240": { name: "عاليا طارق محمد امین", section: 6, group: 1 },
+    "2241": { name: "عبد الرحمن احمد سالم محمد البرماوي", section: 7, group: 1 },
+    "2242": { name: "عبد الرحمن جبريل عثمان صديق", section: 7, group: 1 },
+    "2243": { name: "عبد الرحمن حميدو مستور عزب", section: 7, group: 1 },
+    "2244": { name: "عبد الرحمن سامي الهادي محمد عوض", section: 7, group: 1 },
+    "2245": { name: "عبد الرحمن سيد عبد الرحمن عبده عفيفي", section: 7, group: 1 },
+    "2246": { name: "عبد الرحمن على حسن على", section: 7, group: 1 },
+    "2247": { name: "عبد الله محمود حسن محمد احمد", section: 7, group: 1 },
+    "2248": { name: "عبد الله محمود على عرابي", section: 7, group: 1 },
+    "2249": { name: "عبد الحميد نعیم ناصر محمد", section: 7, group: 1 },
+    "2250": { name: "عبد الرحمن ایمن متولی سلیمان", section: 7, group: 1 },
+    "2251": { name: "عبد الرحمن خاطر عبد الرحمن عبد العاطي", section: 7, group: 1 },
+    "2252": { name: "عبد الرحمن خالد محمد احمد شافعی", section: 7, group: 1 },
+    "2253": { name: "عبد الرحمن رمضان محمد رمضان", section: 7, group: 1 },
+    "2254": { name: "عبد الرحمن صالح عبد الراضي سليمان", section: 7, group: 1 },
+    "2255": { name: "عبد الرحمن علاء الدین صابر مصلحی", section: 7, group: 1 },
+    "2256": { name: "عبد الرحمن عماد جلال عثمان مصطفى", section: 7, group: 1 },
+    "2257": { name: "عبد الرحمن مبارك محمد بدوى", section: 7, group: 1 },
+    "2258": { name: "عبد الرحمن محمد احمد سعيد على", section: 7, group: 1 },
+    "2259": { name: "عبد الرحمن محمود زيدان عبد الرحيم محمد", section: 7, group: 1 },
+    "2260": { name: "عبد الرحمن منصور ابراهيم عبد اللطيف", section: 7, group: 1 },
+    "2261": { name: "عبد الرحمن هاشم عبدالهادی هاشم", section: 7, group: 1 },
+    "2262": { name: "عبد الرحمن وجيه ابراهيم محمد", section: 7, group: 1 },
+    "2263": { name: "عبد الله السيد حسن علی احمد", section: 7, group: 1 },
+    "2264": { name: "عبدالله جابر رشیدی حسن", section: 7, group: 1 },
+    "2265": { name: "عبد الله حافظ بخيت حافظ محمد", section: 7, group: 1 },
+    "2266": { name: "عبد الله رمضان حلمى عبد الوكيل سليمان", section: 7, group: 1 },
+    "2267": { name: "عبدالله سامح عبدالله محمد", section: 7, group: 1 },
+    "2268": { name: "عبد الله شهاب محمد محمد على", section: 7, group: 1 },
+    "2269": { name: "عبد الله ضاحي كمال عدلی محمد", section: 7, group: 1 },
+    "2270": { name: "عبد الله عماد حمدى حسن البكل", section: 7, group: 1 },
+    "2271": { name: "عبدالله محمد علي حامد طرطور", section: 7, group: 1 },
+    "2272": { name: "عبد الله محمد مصطفى عوض تاج الدين", section: 7, group: 1 },
+    "2273": { name: "عبد الله ممدوح صلاح الدين عطا حمدان محمد", section: 7, group: 1 },
+    "2274": { name: "عبد الله يوسف سيد احمد", section: 7, group: 1 },
+    "2275": { name: "عزه محمود عبد الحميد محمود", section: 7, group: 1 },
+    "2276": { name: "علا طارق بكر السيد بكر", section: 7, group: 1 },
+    "2277": { name: "على ابراهيم على محمد", section: 7, group: 1 },
+    "2278": { name: "على حسين عقل عبد العزيز", section: 7, group: 1 },
+    "2279": { name: "على خالد حامد سالم", section: 7, group: 1 },
+    "2280": { name: "على محمد ابوالوفا عبد اللطيف احمد", section: 7, group: 1 },
+    "2281": { name: "على محمد علی محمد", section: 8, group: 2 },
+    "2282": { name: "على مصطفى يونس عباس احمد", section: 8, group: 2 },
+    "2283": { name: "على نور محمد عزت", section: 8, group: 2 },
+    "2284": { name: "على ياسر على سيد احمد", section: 8, group: 2 },
+    "2285": { name: "عمار محمد تاج الدين على", section: 8, group: 2 },
+    "2286": { name: "عمار ممدوح احمد محمد البهي", section: 8, group: 2 },
+    "2287": { name: "عمار یاسر مصطفى ابراهيم", section: 8, group: 2 },
+    "2288": { name: "عمر احمد السيد ابراهيم السيد", section: 8, group: 2 },
+    "2289": { name: "عمر احمد عبد المنعم حسين نصير", section: 8, group: 2 },
+    "2290": { name: "عمر ايمن فتحي محمد بخيت", section: 8, group: 2 },
+    "2291": { name: "عمر حازم عزت عبد الحميد", section: 8, group: 2 },
+    "2292": { name: "عمر سعد السيد اسماعيل", section: 8, group: 2 },
+    "2293": { name: "عمر عبد المعز احمد الهنداوى فايد", section: 8, group: 2 },
+    "2294": { name: "عمر محمد فاروق محمد عبد الفتاح", section: 8, group: 2 },
+    "2295": { name: "عمر مسعد احمد مسعد عبده", section: 8, group: 2 },
+    "2296": { name: "عمر ناصر احمد محمد", section: 8, group: 2 },
+    "2297": { name: "عمر نور الدين سليمان جاد الرب سليمان", section: 8, group: 2 },
+    "2298": { name: "عمرو سيد حسانين احمد محمد", section: 8, group: 2 },
+    "2299": { name: "عمرو عبد الكريم محمد الرشيدي", section: 8, group: 2 },
+    "2300": { name: "عمرو على عبد اللاه محمد", section: 8, group: 2 },
+    "2301": { name: "عيسوى عبد الغني عابدين عيسوى", section: 8, group: 2 },
+    "2302": { name: "فادي جورج لبيب بختان", section: 8, group: 2 },
+    "2303": { name: "فارس خالد عبد العليم حسن على", section: 8, group: 2 },
+    "2304": { name: "فارس قرباوی حسن قرباوی", section: 8, group: 2 },
+    "2305": { name: "فارس هاني دياب على", section: 8, group: 2 },
+    "2306": { name: "فاطمه علاء الشحات عبد المنعم", section: 8, group: 2 },
+    "2307": { name: "فاطمه هانی محمد معتوق", section: 8, group: 2 },
+    "2308": { name: "فاطمه وليد محمد على", section: 8, group: 2 },
+    "2309": { name: "فرح غريب محمد عبد الصمد", section: 8, group: 2 },
+    "2310": { name: "فرح فتحى عبد الواحد احمد على", section: 8, group: 2 },
+    "2311": { name: "فريدة حسن محمد عبد الجليل", section: 8, group: 2 },
+    "2312": { name: "فهد وائل عبده محمد", section: 8, group: 2 },
+    "2313": { name: "كامله عباس محمد علوان محفوظ", section: 8, group: 2 },
+    "2314": { name: "كريم حسين حسن حسين", section: 8, group: 2 },
+    "2315": { name: "كريم عاطف سعيد على وهبه", section: 8, group: 2 },
+    "2316": { name: "كريم ماجد ممدوح محمد عمر حسن", section: 8, group: 2 },
+    "2317": { name: "كريم محمد عطيه ابراهيم", section: 8, group: 2 },
+    "2318": { name: "كنزي محمد اسماعیل احمد غنيم", section: 8, group: 2 },
+    "2319": { name: "كيرلس بشرى بدرى لبيب", section: 8, group: 2 },
+    "2320": { name: "كيرلس روماني خلف فيهيم", section: 9, group: 2 },
+    "2321": { name: "كيرلس صلاح توفيق شحاته", section: 9, group: 2 },
+    "2322": { name: "كيرلس نصيف نصحى عبد الله", section: 9, group: 2 },
+    "2323": { name: "لاميس السيد عبد الرحمن عبد الراضى عمر", section: 9, group: 2 },
+    "2324": { name: "لؤى صلاح سمير محمد غريب", section: 9, group: 2 },
+    "2325": { name: "ليلى محمد عبد الرازق مصطفى", section: 9, group: 2 },
+    "2326": { name: "ماجد محمد ماجد حامد مازون", section: 9, group: 2 },
+    "2327": { name: "ماذن مجدى سعيد عبد العظيم", section: 9, group: 2 },
+    "2328": { name: "مارتينا سامي شكرى يوسف ندا", section: 9, group: 2 },
+    "2329": { name: "مارك رمزي ابراهيم صبحي", section: 9, group: 2 },
+    "2330": { name: "مازن محمد احمد عاطف", section: 9, group: 2 },
+    "2331": { name: "محب هشام عبد الملاك سيداروس تادرس", section: 9, group: 2 },
+    "2332": { name: "محمد ابراهيم محمد ابراهيم محمد", section: 9, group: 2 },
+    "2333": { name: "محمد احمد سعد عطيه الله بلال", section: 9, group: 2 },
+    "2334": { name: "محمد احمد على عبدربه", section: 9, group: 2 },
+    "2335": { name: "محمد اسماعيل محمد كمال ابو زهره", section: 9, group: 2 },
+    "2336": { name: "محمد اشرف محمد عواد", section: 9, group: 2 },
+    "2337": { name: "محمد الحسين محمد محمد", section: 9, group: 2 },
+    "2338": { name: "محمد السيد كامل ابراهيم عبد العزيز", section: 9, group: 2 },
+    "2339": { name: "محمد القذافي نجم الدين محمد محمد", section: 9, group: 2 },
+    "2340": { name: "محمد ايمن على على", section: 9, group: 2 },
+    "2341": { name: "محمد ايهاب صبري محمود يونس", section: 9, group: 2 },
+    "2342": { name: "محمد بدر الدين ابراهيم الجبالي", section: 9, group: 2 },
+    "2343": { name: "محمد جمال زينهم حسن", section: 9, group: 2 },
+    "2344": { name: "محمد حازم احمد علی محمد", section: 9, group: 2 },
+    "2345": { name: "محمد حنفي خيري حنفي", section: 9, group: 2 },
+    "2346": { name: "محمد رجب سعید سید", section: 9, group: 2 },
+    "2347": { name: "محمد رجب فوزي حسانين", section: 9, group: 2 },
+    "2348": { name: "محمد رفعت على عوض التونى", section: 9, group: 2 },
+    "2349": { name: "محمد رمضان البيومي إبراهيم محمد", section: 9, group: 2 },
+    "2350": { name: "محمد رمضان على احمد", section: 9, group: 2 },
+    "2351": { name: "محمد سامح عبد الهادي على", section: 9, group: 2 },
+    "2352": { name: "محمد سمير سيد محمد", section: 9, group: 2 },
+    "2353": { name: "محمد صالح محمد يوسف", section: 9, group: 2 },
+    "2354": { name: "محمد صلاح محمد عبد الحكم", section: 9, group: 2 },
+    "2355": { name: "محمد عادل محمد عبد العاطي محمد", section: 9, group: 2 },
+    "2356": { name: "محمد عاطف فتحى عبد العال السيد", section: 9, group: 2 },
+    "2357": { name: "محمد عبد العال محمد عبد العال", section: 9, group: 2 },
+    "2358": { name: "محمد علی امام علی", section: 9, group: 2 },
+    "2359": { name: "محمد علی محمد خليل محمد", section: 9, group: 2 },
+    "2360": { name: "محمد علي شفيق ابو النجاه العتيقي", section: 9, group: 2 },
+    "2361": { name: "محمد فارس محمد السيد محمد", section: 10, group: 2 },
+    "2362": { name: "محمد فوزى شحته محمود عزازی", section: 10, group: 2 },
+    "2363": { name: "محمد كريم محمد محمود", section: 10, group: 2 },
+    "2364": { name: "محمد مجدى حسين على", section: 10, group: 2 },
+    "2365": { name: "محمد محروس ابراهيم احمد", section: 10, group: 2 },
+    "2366": { name: "محمد محمود ابراهیم احمد", section: 10, group: 2 },
+    "2367": { name: "محمد مصطفى سيد حسن عبد النبي", section: 10, group: 2 },
+    "2368": { name: "محمد مصطفى عبدالله احمد محمود", section: 10, group: 2 },
+    "2369": { name: "محمد مصطفى محمد عبد المجيد شعلان", section: 10, group: 2 },
+    "2370": { name: "محمد مصطفى محمد فرج خليفه", section: 10, group: 2 },
+    "2371": { name: "محمد مهدي شحاته الزاهي خميس", section: 10, group: 2 },
+    "2372": { name: "محمد ناجي محمد على احمد القاضي", section: 10, group: 2 },
+    "2373": { name: "محمد نبيل عبد العزيز مصطفى الكرداوي", section: 10, group: 2 },
+    "2374": { name: "محمد نبيل عطيه خليل الدقاق", section: 10, group: 2 },
+    "2375": { name: "محمد وحيد محمد محمود", section: 10, group: 2 },
+    "2376": { name: "محمد وليد انور محمود محمد", section: 10, group: 2 },
+    "2377": { name: "محمد وليد سيد عبد الرحيم على", section: 10, group: 2 },
+    "2378": { name: "محمد يحي احمد مصطفى محمد", section: 10, group: 2 },
+    "2379": { name: "محمد یوسف محمد محمد غنيم", section: 10, group: 2 },
+    "2380": { name: "محمود احمد عبد الحميد محمود", section: 10, group: 2 },
+    "2381": { name: "محمود احمد محمود حافظ", section: 10, group: 2 },
+    "2382": { name: "محمود حافظ امین علی", section: 10, group: 2 },
+    "2383": { name: "محمود حسن عبد الفضيل محمود", section: 10, group: 2 },
+    "2384": { name: "محمود حميد يوسف محمود حميد", section: 10, group: 2 },
+    "2385": { name: "محمود خالد السيد عبد اللطيف خالد", section: 10, group: 2 },
+    "2386": { name: "محمود خالد محمود على سلامه", section: 10, group: 2 },
+    "2387": { name: "محمود سمير سعد احمد محمد", section: 10, group: 2 },
+    "2388": { name: "محمود صلاح حسن احمد القشيري", section: 10, group: 2 },
+    "2389": { name: "محمود على ابو العنين عطيو", section: 10, group: 2 },
+    "2390": { name: "محمود محمد الصافي هاشم حسين", section: 10, group: 2 },
+    "2391": { name: "محمود محمد حسن فايز حسن", section: 10, group: 2 },
+    "2392": { name: "محمود محمد سعيد سيد شلبي", section: 10, group: 2 },
+    "2393": { name: "محمود نبيل شعبان سراج الدين", section: 10, group: 2 },
+    "2394": { name: "مروان احمد عبد الفتاح ابو المكارم", section: 10, group: 2 },
+    "2395": { name: "مروان هانى فؤاد مصطفى محمد رمضان", section: 10, group: 2 },
+    "2396": { name: "مريم احمد عبد الرحمن حجازي عبد الله", section: 10, group: 2 },
+    "2397": { name: "مريم خالد اسماعيل الامبابي خميس", section: 10, group: 2 },
+    "2398": { name: "مريم عصام خميس على عبد اللطيف", section: 10, group: 2 },
+    "2399": { name: "مريم محمد جابر آدم", section: 10, group: 2 },
+    "2400": { name: "مريم محمد قرني عجمي", section: 10, group: 2 },
+    "2401": { name: "مريم محمد محمد ابراهيم التملي", section: 11, group: 2 },
+    "2402": { name: "مريم محمد مسعد محمد امین", section: 11, group: 2 },
+    "2403": { name: "مريم محمود جابر حسان عبد المجيد", section: 11, group: 2 },
+    "2404": { name: "مريم نجيب نصحى نجيب مليك", section: 11, group: 2 },
+    "2405": { name: "مصطفى رمضان عبدالله حسن كشك", section: 11, group: 2 },
+    "2406": { name: "مصطفى عادل سعد مصطفى خميس", section: 11, group: 2 },
+    "2407": { name: "مصطفى عصام ناجي عبد الحميد رمضان", section: 11, group: 2 },
+    "2408": { name: "مصطفى عمر سید حسن", section: 11, group: 2 },
+    "2409": { name: "مصطفى ماهر مصطفى عبد الفتاح قطب", section: 11, group: 2 },
+    "2410": { name: "مصطفى محمد زكى حسن محمد", section: 11, group: 2 },
+    "2411": { name: "مصطفى محمد شعبان عبد القوى", section: 11, group: 2 },
+    "2412": { name: "مصطفى محمود احمد منصور عبد السلام", section: 11, group: 2 },
+    "2413": { name: "مصطفى محمود السيد ابوسليمان", section: 11, group: 2 },
+    "2414": { name: "مصطفى محمود محمد قطب", section: 11, group: 2 },
+    "2415": { name: "مصطفى مدحت مصطفى عبد الحليم", section: 11, group: 2 },
+    "2416": { name: "مصطفى تامر محمد نبيل حسين على", section: 11, group: 2 },
+    "2417": { name: "مصطفي محمود محمد عبد النبي", section: 11, group: 2 },
+    "2418": { name: "معاذ احمد على اسماعيل على", section: 11, group: 2 },
+    "2419": { name: "معاذ محمد منوفى الوزان", section: 11, group: 2 },
+    "2420": { name: "معاذ هشام مسعد ابراهيم حال", section: 11, group: 2 },
+    "2421": { name: "ملك ابراهيم بحبوح ابراهيم", section: 11, group: 2 },
+    "2422": { name: "ملك احمد شعبان سليمان القصبي", section: 11, group: 2 },
+    "2423": { name: "ملك أحمد سيد أحمد عطا", section: 11, group: 2 },
+    "2424": { name: "ملك محجوب عبد الفضيل صالح عبد الله", section: 11, group: 2 },
+    "2425": { name: "ملك محمد محمد هاشم احمد", section: 11, group: 2 },
+    "2426": { name: "ملك وائل نيازي عبد الحكم عبد اللطيف", section: 11, group: 2 },
+    "2427": { name: "ملك وحيد حنفي عبد الجيد", section: 11, group: 2 },
+    "2428": { name: "منة الله ايهاب جمال عزب", section: 11, group: 2 },
+    "2429": { name: "منة الله ماهر محمد ابراهيم ابوميز", section: 11, group: 2 },
+    "2430": { name: "منه الله محمد احمد محمد", section: 11, group: 2 },
+    "2431": { name: "منه الله مصطفى عيد مصطفى", section: 11, group: 2 },
+    "2432": { name: "منه حاتم سید محمد احمد", section: 11, group: 2 },
+    "2433": { name: "منه كريم محمد المتولى ابواليزيد محمد", section: 11, group: 2 },
+    "2434": { name: "منه مبروك محمد حسن الحليفي", section: 11, group: 2 },
+    "2435": { name: "منه محمد عبد الرؤوف محمد", section: 11, group: 2 },
+    "2436": { name: "منه ناصر عامر تاج الدين", section: 11, group: 2 },
+    "2437": { name: "مهند وائل ممدوح احمد", section: 11, group: 2 },
+    "2438": { name: "مؤمن يوسف رجب عوض درويش القللي", section: 11, group: 2 },
+    "2439": { name: "مي حسن حسين حسن رزق", section: 11, group: 2 },
+    "2440": { name: "می عبد الله عبد الصالحين محمود ابو العلا", section: 11, group: 2 },
+    "2441": { name: "ميار احمد فرج علي", section: 12, group: 2 },
+    "2442": { name: "ميشيل صفوت شفیق باسیلی", section: 12, group: 2 },
+    "2443": { name: "نادر اسامه حسین عثمان", section: 12, group: 2 },
+    "2444": { name: "نادر سداد فتحي سعيد", section: 12, group: 2 },
+    "2445": { name: "نادره وائل صبحی حسین حسن", section: 12, group: 2 },
+    "2446": { name: "ناديه محمد مکرم ابراهيم شحاته", section: 12, group: 2 },
+    "2447": { name: "ناردين ذكي أمير ذكي", section: 12, group: 2 },
+    "2448": { name: "ناهد رمضان فتحي عبد الرحمن", section: 12, group: 2 },
+    "2449": { name: "نجلاء عصام الهادي عبد المرضى امام", section: 12, group: 2 },
+    "2450": { name: "ندا محمد عيد ضيفي احمد", section: 12, group: 2 },
+    "2451": { name: "ندى احمد عبد المنعم احمد", section: 12, group: 2 },
+    "2452": { name: "ندى جميل السيد احمد ابراهيم", section: 12, group: 2 },
+    "2453": { name: "ندى علاء ابراهيم محمد دغیدی", section: 12, group: 2 },
+    "2454": { name: "ندى وجدى إسماعيل حمیده خنیزی", section: 12, group: 2 },
+    "2455": { name: "نسرين عماد سيد عبد الرحمن عبد الرحيم", section: 12, group: 2 },
+    "2456": { name: "نور احمد حلمي عبد العظيم محمد", section: 12, group: 2 },
+    "2457": { name: "نور الدين محمد محمود محمد", section: 12, group: 2 },
+    "2458": { name: "نور کرم فرج الله جاد عثمان", section: 12, group: 2 },
+    "2459": { name: "نور محمد بكر محمد بكر", section: 12, group: 2 },
+    "2460": { name: "نور محمد صابر احمد محمد", section: 12, group: 2 },
+    "2461": { name: "نور محمد عادل ابراهیم حجازی", section: 12, group: 2 },
+    "2462": { name: "نورهان علاء احمد سليمان محمد", section: 12, group: 2 },
+    "2463": { name: "نورهان نبيل احمد عويس فرج", section: 12, group: 2 },
+    "2464": { name: "نیره محمد سالم محمد عبدالنبی", section: 12, group: 2 },
+    "2465": { name: "هاجر اسلام سرور عبد الحليم", section: 12, group: 2 },
+    "2466": { name: "هاجر هشام يحيى محمد على", section: 12, group: 2 },
+    "2467": { name: "هايدى مؤمن نعيم لبيب", section: 12, group: 2 },
+    "2468": { name: "هبه الله حمدى السيد محمد ابو العنين", section: 12, group: 2 },
+    "2469": { name: "هبه عبد الحميد احمد عبد الحميد حشيش", section: 12, group: 2 },
+    "2470": { name: "هبه محمد محمد نجيب سليمان حسن", section: 12, group: 2 },
+    "2471": { name: "هدى حمزه محمد برعي", section: 12, group: 2 },
+    "2472": { name: "هدي محمد محمود طه", section: 12, group: 2 },
+    "2473": { name: "هدير خيرى محمد عبد المحسن عبيد", section: 12, group: 2 },
+    "2474": { name: "هدير صالح حسن صالح", section: 12, group: 2 },
+    "2475": { name: "هشام أسامه السيد محمد مجاهد", section: 12, group: 2 },
+    "2476": { name: "همس محمد مصطفى عبد الله عبد اللطيف", section: 12, group: 2 },
+    "2477": { name: "هنا محمد عطية عبد الرسول", section: 12, group: 2 },
+    "2478": { name: "هند على السيد عبد الحميد", section: 12, group: 2 },
+    "2479": { name: "ياسر احمد محمد احمد", section: 12, group: 2 },
+    "2480": { name: "ياسر وليد مجدى صالح سليمان", section: 12, group: 2 },
+    "2481": { name: "ياسمين مصطفى اسماعيل مرعى محمد", section: 13, group: 2 },
+    "2482": { name: "ياسين محمود محمد احمد", section: 13, group: 2 },
+    "2483": { name: "يحيى احمد سعد رجب صالح", section: 13, group: 2 },
+    "2484": { name: "يمنى وليد محمد سید", section: 13, group: 2 },
+    "2485": { name: "يوسف احمد جمال السيد عامر", section: 13, group: 2 },
+    "2486": { name: "يوسف احمد ربيع احمد عبد الهادي", section: 13, group: 2 },
+    "2487": { name: "يوسف احمد عبد الغفار عبد العال سليم", section: 13, group: 2 },
+    "2488": { name: "يوسف اسامه محمود ابراهیم", section: 13, group: 2 },
+    "2489": { name: "يوسف جابر سمير جابر خليل", section: 13, group: 2 },
+    "2490": { name: "يوسف حامد راضی احمد ریحان", section: 13, group: 2 },
+    "2491": { name: "يوسف سامح يوسف مهران", section: 13, group: 2 },
+    "2492": { name: "يوسف ضياء فتحى عبد الحميد", section: 13, group: 2 },
+    "2493": { name: "يوسف عادل ذكي شحاته", section: 13, group: 2 },
+    "2494": { name: "يوسف عصام فرج أبو العنيين رفاعي", section: 13, group: 2 },
+    "2495": { name: "يوسف علاء محروس محمود اسماعیل", section: 13, group: 2 },
+    "2496": { name: "يوسف محمد حسين محمد قابيل", section: 13, group: 2 },
+    "2497": { name: "يوسف محمد رؤف ياقوت", section: 13, group: 2 },
+    "2498": { name: "يوسف محمد فرج الله عبد الباقي السيد مسعود", section: 13, group: 2 },
+    "2499": { name: "يوسف محمد كمال محمد فؤاد", section: 13, group: 2 },
+    "2500": { name: "يوسف مصطفى عبد المحسن طه", section: 13, group: 2 },
+    "2501": { name: "يوسف نزيه عبدالنبی امام", section: 13, group: 2 }
+}; 
 
-// قاعدة بيانات الدكاترة (كما هي)
+// ======================= قاعدة بيانات الدكاترة (المحاضرات) =======================
 const teachersDB = {
     "20250": { name:"د. جهاد زياده", role:"doctor", subject:"Statistics", lectures:[{group:"1",day:"الجمعة",time:"12:30",place:"F sem"},{group:"2",day:"الجمعة",time:"01:40",place:"F sem"}] },
     "20251": { name:"د. سيمون عزت", role:"doctor", subject:"Math", lectures:[{group:"1",day:"الجمعة",time:"02:50",place:"A new"},{group:"2",day:"الجمعة",time:"02:50",place:"A new"}] },
@@ -425,13 +882,125 @@ const teachersDB = {
     "20256": { name:"د. مي عبد العظيم", role:"doctor", subject:"IT", lectures:[{group:"1",day:"الخميس",time:"11:20",place:"A new"},{group:"2",day:"الخميس",time:"12:30",place:"A new"}] }
 };
 
+// ======================= قاعدة بيانات المعيدين (السكاشن من الصور) =======================
+const assistantsDB = {
+    // IT Sections
+    "240": { name:"م. كريم عادل", role:"assistant", subject:"سكشن IT", lectures:[
+        {group:"12", day:"السبت", time:"12:30", place:"D102"},
+        {group:"13", day:"الاثنين", time:"12:30", place:"D103"}
+    ]},
+    "241": { name:"م. رضوى", role:"assistant", subject:"سكشن IT", lectures:[
+        {group:"10", day:"الاثنين", time:"09:00", place:"D102"},
+        {group:"5", day:"الاثنين", time:"10:10", place:"D102"},
+        {group:"6", day:"الاثنين", time:"11:20", place:"D102"},
+        {group:"7", day:"الاثنين", time:"12:30", place:"D102"},
+        {group:"4", day:"الاثنين", time:"01:40", place:"D102"},
+        {group:"3", day:"الاثنين", time:"02:50", place:"D102"},
+        {group:"1", day:"الثلاثاء", time:"09:00", place:"D103"},
+        {group:"2", day:"الثلاثاء", time:"10:10", place:"D103"},
+        {group:"8", day:"الثلاثاء", time:"11:20", place:"D103"},
+        {group:"11", day:"الثلاثاء", time:"12:30", place:"D103"},
+        {group:"9", day:"الثلاثاء", time:"01:40", place:"D103"}
+    ]},
+    // Math Sections
+    "242": { name:"م. أحمد نشأت", role:"assistant", subject:"سكشن Math", lectures:[
+        {group:"9", day:"الاثنين", time:"01:40", place:"G205"},
+        {group:"6", day:"الأربعاء", time:"09:00", place:"G203"},
+        {group:"7", day:"الأربعاء", time:"09:00", place:"G203"},
+        {group:"10", day:"الأربعاء", time:"11:20", place:"G201"},
+        {group:"12", day:"الأربعاء", time:"11:20", place:"G201"},
+        {group:"1", day:"الخميس", time:"09:00", place:"A305"},
+        {group:"4", day:"الخميس", time:"09:00", place:"A305"},
+        {group:"11", day:"الخميس", time:"11:20", place:"G207"},
+        {group:"2", day:"الخميس", time:"12:30", place:"A304"},
+        {group:"3", day:"الخميس", time:"12:30", place:"A304"},
+        {group:"5", day:"الخميس", time:"01:40", place:"A305"},
+        {group:"8", day:"الخميس", time:"01:40", place:"A305"}
+    ]},
+    "243": { name:"م. ياسمين إبراهيم", role:"assistant", subject:"سكشن Math", lectures:[
+        {group:"13", day:"الاثنين", time:"04:00", place:"G201"}
+    ]},
+    // Physics Sections
+    "244": { name:"م. غادة", role:"assistant", subject:"سكشن Physics", lectures:[
+        {group:"5", day:"الجمعة", time:"09:00", place:"F Sem"},
+        {group:"11", day:"الجمعة", time:"09:00", place:"F Sem"},
+        {group:"12", day:"الجمعة", time:"09:00", place:"F Sem"},
+        {group:"6", day:"الجمعة", time:"10:10", place:"F Sem"},
+        {group:"7", day:"الجمعة", time:"10:10", place:"F Sem"},
+        {group:"8", day:"الجمعة", time:"10:10", place:"F Sem"},
+        {group:"9", day:"الجمعة", time:"12:30", place:"G205"},
+        {group:"10", day:"الجمعة", time:"12:30", place:"G205"},
+        {group:"3", day:"الجمعة", time:"01:40", place:"F Sem"},
+        {group:"4", day:"الجمعة", time:"01:40", place:"F Sem"},
+        {group:"13", day:"الاثنين", time:"01:40", place:"G105"}
+    ]},
+    "245": { name:"م. أمنية إبراهيم", role:"assistant", subject:"سكشن Physics", lectures:[
+        {group:"1", day:"الأربعاء", time:"02:50", place:"G202"},
+        {group:"2", day:"الأربعاء", time:"02:50", place:"G202"}
+    ]},
+    // IS Sections
+    "246": { name:"م. دينا علي", role:"assistant", subject:"سكشن IS", lectures:[
+        {group:"6", day:"الثلاثاء", time:"09:00", place:"D101"},
+        {group:"7", day:"الثلاثاء", time:"11:20", place:"D102"},
+        {group:"8", day:"الثلاثاء", time:"12:30", place:"D102"},
+        {group:"13", day:"الثلاثاء", time:"01:40", place:"D102"},
+        {group:"10", day:"الثلاثاء", time:"02:50", place:"D102"},
+        {group:"11", day:"الأربعاء", time:"09:00", place:"D102"},
+        {group:"1", day:"الأربعاء", time:"10:10", place:"D102"},
+        {group:"3", day:"الخميس", time:"09:00", place:"D102"},
+        {group:"4", day:"الخميس", time:"10:10", place:"D102"},
+        {group:"9", day:"الخميس", time:"11:20", place:"D102"},
+        {group:"5", day:"الخميس", time:"12:30", place:"D102"},
+        {group:"12", day:"الخميس", time:"01:40", place:"D102"},
+        {group:"2", day:"الخميس", time:"02:50", place:"D102"}
+    ]},
+    // Statistics Sections
+    "247": { name:"م. مريم أشرف", role:"assistant", subject:"سكشن Statistics", lectures:[
+        {group:"1", day:"الأربعاء", time:"04:00", place:"G201"},
+        {group:"2", day:"الأربعاء", time:"04:00", place:"G201"},
+        {group:"3", day:"الأربعاء", time:"02:50", place:"G201"},
+        {group:"4", day:"الأربعاء", time:"02:50", place:"G201"}
+    ]},
+    "248": { name:"م. إيمان فوزي", role:"assistant", subject:"سكشن Statistics", lectures:[
+        {group:"5", day:"الخميس", time:"09:00", place:"A202"},
+        {group:"6", day:"الخميس", time:"09:00", place:"A202"},
+        {group:"7", day:"الخميس", time:"10:10", place:"A202"},
+        {group:"12", day:"الخميس", time:"10:10", place:"A202"},
+        {group:"13", day:"الخميس", time:"11:20", place:"A304"},
+        {group:"10", day:"الخميس", time:"01:40", place:"G205"},
+        {group:"11", day:"الخميس", time:"01:40", place:"G205"},
+        {group:"8", day:"الخميس", time:"02:50", place:"G205"},
+        {group:"9", day:"الخميس", time:"02:50", place:"G205"}
+    ]},
+    // Digital Transformation (DT) Sections
+    "249": { name:"م. نادية هلال", role:"assistant", subject:"سكشن DT", lectures:[
+        {group:"8", day:"الأربعاء", time:"09:00", place:"D102"},
+        {group:"7", day:"الأربعاء", time:"10:10", place:"D102"},
+        {group:"5", day:"الأربعاء", time:"12:30", place:"D102"},
+        {group:"6", day:"الأربعاء", time:"01:40", place:"D102"},
+        {group:"2", day:"الخميس", time:"09:00", place:"D104"},
+        {group:"1", day:"الخميس", time:"10:10", place:"D104"},
+        {group:"4", day:"الخميس", time:"12:30", place:"D104"},
+        {group:"3", day:"الخميس", time:"01:40", place:"D104"}
+    ]},
+    "250": { name:"م. أمنية إبراهيم", role:"assistant", subject:"سكشن DT", lectures:[
+        {group:"13", day:"الخميس", time:"09:00", place:"D103"},
+        {group:"11", day:"الخميس", time:"10:10", place:"D103"},
+        {group:"10", day:"الخميس", time:"11:20", place:"D103"},
+        {group:"9", day:"الخميس", time:"01:40", place:"D103"},
+        {group:"12", day:"الخميس", time:"02:50", place:"D103"}
+    ]}
+};
+
 // تهيئة LocalStorage
 if (!localStorage.getItem("smart_posts")) localStorage.setItem("smart_posts", JSON.stringify([]));
 if (!localStorage.getItem("smart_overrides")) localStorage.setItem("smart_overrides", JSON.stringify([])); 
 if (!localStorage.getItem("smart_submissions")) localStorage.setItem("smart_submissions", JSON.stringify([]));
+if (!localStorage.getItem("smart_section_status")) localStorage.setItem("smart_section_status", JSON.stringify([])); 
 
 function groupFromSection(sec){
     sec = Number(sec);
+    // الدكاترة بيشوفوا مجموعات (1 أو 2)، المعيدين بيشوفوا سكاشن محددة
     return (sec >= 1 && sec <= 7) ? "1" : "2";
 }
 
@@ -464,7 +1033,7 @@ function performLogin(){
             currentUser = {role:"student", id: code, ...studentsDB[code]};
             showStudent();
         } else {
-            Swal.fire({icon: 'error', title: 'خطأ', text: 'كود الطالب غير مسجل (جرب: 1, 2... 40)'});
+            Swal.fire({icon: 'error', title: 'خطأ', text: 'كود الطالب غير مسجل (جرب: 2000, 2001...)'});
         }
         return;
     }
@@ -472,6 +1041,14 @@ function performLogin(){
     // Doctor Login Check
     if(teachersDB[code] && teachersDB[code].role==="doctor"){
         currentUser = teachersDB[code];
+        currentUser.code = code;
+        showStaff();
+        return;
+    }
+
+    // Assistant Login
+    if(assistantsDB[code] && assistantsDB[code].role==="assistant"){
+        currentUser = assistantsDB[code];
         currentUser.code = code;
         showStaff();
         return;
@@ -486,6 +1063,12 @@ function showStaff(){
     document.getElementById("staff-dashboard").style.display="block";
     document.getElementById("staff-title").innerHTML = `أهلاً، <span style="color:var(--primary)">${currentUser.name}</span>`;
 
+    if(currentUser.role === 'assistant'){
+        document.getElementById("assistant-status-card").classList.remove("hidden");
+    } else {
+        document.getElementById("assistant-status-card").classList.add("hidden");
+    }
+
     loadStaffControls();
     renderStaffPosts();
 }
@@ -495,18 +1078,26 @@ function loadStaffControls(){
     const grpSel = document.getElementById("staff-cancel-group");
     daySel.innerHTML=""; grpSel.innerHTML="";
 
-    // Populate drop-downs for Cancel
     let days = new Set();
     currentUser.lectures.forEach(l => days.add(l.day));
     days.forEach(d => daySel.innerHTML+=`<option>${d}</option>`);
     
-    grpSel.innerHTML = `<option value="1">جروب 1</option><option value="2">جروب 2</option>`;
+    // لو الدكتور (جروبات 1 و 2)، لو معيد (سكاشن محددة)
+    if(currentUser.role === 'doctor'){
+        grpSel.innerHTML = `<option value="1">جروب 1</option><option value="2">جروب 2</option>`;
+    } else {
+        // للمعيد نعرض السكاشن اللي بيدرسلها فقط
+        currentUser.lectures.forEach(l => {
+            grpSel.innerHTML += `<option value="${l.group}">سكشن ${l.group}</option>`;
+        });
+    }
 }
 
 // === خاصية كشف التعارض والوقت ===
 function checkConflict(day, time, place) {
-    for (let tId in teachersDB) {
-        let t = teachersDB[tId];
+    let allStaff = {...teachersDB, ...assistantsDB};
+    for (let tId in allStaff) {
+        let t = allStaff[tId];
         for (let l of t.lectures) {
             if (l.day === day && l.time === time && l.place === place) return true;
         }
@@ -530,31 +1121,27 @@ function staffReschedule(){
     }
 
     let overrides = JSON.parse(localStorage.getItem("smart_overrides"));
-    let groupsToUpdate = targetGroup === "both" ? ["1", "2"] : [targetGroup];
     
-    groupsToUpdate.forEach(g => {
-        overrides = overrides.filter(o => !(o.subject === currentUser.subject && o.group === g));
-        overrides.push({
-            id: Date.now() + Math.random(),
-            subject: currentUser.subject,
-            doctor: currentUser.name,
-            group: g,
-            newDay: newDay,
-            newTime: newTime,
-            newPlace: newPlace,
-            isMerged: targetGroup === "both"
-        });
+    overrides = overrides.filter(o => !(o.subject === currentUser.subject && o.group === targetGroup));
+    overrides.push({
+        id: Date.now() + Math.random(),
+        subject: currentUser.subject,
+        doctor: currentUser.name,
+        group: targetGroup,
+        newDay: newDay,
+        newTime: newTime,
+        newPlace: newPlace,
+        isMerged: false
     });
 
     localStorage.setItem("smart_overrides", JSON.stringify(overrides));
     
     let posts = JSON.parse(localStorage.getItem("smart_posts"));
-    let msg = targetGroup==="both" ? "تم ضم المجموعتين وتعديل الموعد" : "تم تعديل موعد المحاضرة";
     posts.push({
         id: Date.now(),
         type: "note",
         subject: currentUser.subject,
-        desc: `${msg}: يوم ${newDay} الساعة ${newTime} في ${newPlace}`,
+        desc: `تم تعديل الموعد: يوم ${newDay} الساعة ${newTime} في ${newPlace}`,
         date: new Date().toISOString().split('T')[0],
         author: currentUser.name
     });
@@ -592,6 +1179,40 @@ function staffAddTask(){
     renderStaffPosts();
 }
 
+function updateSectionStatus() {
+    let status = document.getElementById("section-status-type").value;
+    let group = document.getElementById("status-group").value;
+    
+    let statuses = JSON.parse(localStorage.getItem("smart_section_status"));
+    statuses = statuses.filter(s => !(s.author === currentUser.name && s.group === group));
+    
+    statuses.push({
+        author: currentUser.name,
+        subject: currentUser.subject,
+        group: group,
+        status: status,
+        timestamp: Date.now()
+    });
+    
+    localStorage.setItem("smart_section_status", JSON.stringify(statuses));
+    
+    let posts = JSON.parse(localStorage.getItem("smart_posts"));
+    let statusText = status === "Online" ? "أونلاين (عن بعد)" : (status === "Cancelled" ? "ملغي" : "في الكلية (Offline)");
+    
+    posts.push({
+        id: Date.now(),
+        type: "note",
+        subject: currentUser.subject,
+        desc: `تحديث حالة السكشن: ${statusText}`,
+        date: new Date().toISOString().split('T')[0],
+        author: currentUser.name
+    });
+    localStorage.setItem("smart_posts", JSON.stringify(posts));
+    
+    Toastify({text: `تم تغيير الحالة إلى ${status}`, backgroundColor: "#8b5cf6"}).showToast();
+    renderStaffPosts();
+}
+
 function renderStaffPosts(){
     let posts = JSON.parse(localStorage.getItem("smart_posts"));
     let submissions = JSON.parse(localStorage.getItem("smart_submissions"));
@@ -614,7 +1235,14 @@ function renderStaffPosts(){
             if(mySubs.length > 0) {
                 subListHTML = `<div class="submissions-list"><strong><i class="fa-solid fa-file-arrow-down"></i> الاستلامات (${mySubs.length}):</strong>`;
                 mySubs.forEach(s => {
-                    subListHTML += `<div class="sub-item"><span>${s.studentName} (${s.studentId})</span> <span>${s.time}</span></div>`;
+                    subListHTML += `
+                    <div class="sub-item">
+                        <div>
+                            <span>${s.studentName} (${s.studentId})</span><br>
+                            <small style="color:#64748b">${s.time}</small>
+                        </div>
+                        <button class="btn-view-file" onclick="viewFile('${s.fileData}')">معاينة</button>
+                    </div>`;
                 });
                 subListHTML += `</div>`;
             } else {
@@ -623,14 +1251,14 @@ function renderStaffPosts(){
         }
 
         box.innerHTML+=`
-            <div class="schedule-row ${p.type==='cancel'?'cancelled':''}" style="display:block">
-                <div style="display:flex; justify-content:space-between; align-items:flex-start">
+            <div class="schedule-row ${p.type==='cancel'?'cancelled':''}" style="display:flex">
+                <div class="row-header">
                     <div>
                         <div style="display:flex; align-items:center; margin-bottom:5px;">
                             ${labelHTML}
                             <b>${p.subject}</b>
                         </div>
-                        <span style="display:block; margin-top:5px; color:#334155">${p.desc || (p.day + " - جروب " + p.group)}</span>
+                        <span style="display:block; margin-top:5px; color:#334155">${p.desc || (p.day + " - جروب/سكشن " + p.group)}</span>
                     </div>
                     <button class="btn btn-danger" onclick="deletePost(${p.id})"><i class="fa-solid fa-trash"></i></button>
                 </div>
@@ -647,6 +1275,11 @@ function deletePost(id){
     renderStaffPosts();
 }
 
+function viewFile(base64Data) {
+    let win = window.open();
+    win.document.write('<iframe src="' + base64Data + '" frameborder="0" style="border:0; top:0px; left:0px; bottom:0px; right:0px; width:100%; height:100%;" allowfullscreen></iframe>');
+}
+
 // ===================== STUDENT LOGIC ============================
 function showStudent(){
     document.getElementById("login-screen").style.display="none";
@@ -657,46 +1290,63 @@ function showStudent(){
     document.getElementById("info-stu-name").innerText = currentUser.name;
     document.getElementById("info-stu-sec").innerText = "سكشن " + currentUser.section;
 
-    // Auto-select section based on user data
     let sectionSelect = document.getElementById("stu-section");
     sectionSelect.value = currentUser.section;
     
-    // No need to show Filter instructions, just wait for Day selection
+    renderStudentPosts();
 }
 
 function updateStudentSchedule(){
-    let sec = document.getElementById("stu-section").value; // Auto-filled now
+    let sec = document.getElementById("stu-section").value.toString(); 
     let day = document.getElementById("stu-day").value;
     let box = document.getElementById("stu-schedule");
 
     if(!sec || !day) return;
 
-    let group = groupFromSection(sec);
+    let group = groupFromSection(sec); // يحسب 1 أو 2 للدكاترة
     let posts = JSON.parse(localStorage.getItem("smart_posts"));
     let overrides = JSON.parse(localStorage.getItem("smart_overrides"));
+    let sectionStatuses = JSON.parse(localStorage.getItem("smart_section_status"));
+    
     let todayLectures = [];
+    let allStaff = {...teachersDB, ...assistantsDB};
 
-    // 1. Get Base Schedule
-    Object.values(teachersDB).forEach(t=>{
+    Object.values(allStaff).forEach(t=>{
         t.lectures.forEach(l=>{
-            let override = overrides.find(o => o.subject === t.subject && o.group === group);
             
-            let activeDay = override ? override.newDay : l.day;
-            let activeTime = override ? override.newTime : l.time;
-            let activePlace = override ? override.newPlace : l.place;
-            let isModified = !!override;
+            // تحديد اذا كان هذا العنصر يخص الطالب
+            let isForStudent = false;
+            if(t.role === 'doctor' && l.group === group) isForStudent = true; // محاضرة عامة
+            if(t.role === 'assistant' && l.group === sec) isForStudent = true; // سكشن خاص
 
-            if(activeDay === day && l.group === group){
-                let cancelled = posts.some(p=>p.type==="cancel" && p.subject===t.subject && p.day===day && p.group===group);
+            if(isForStudent){
+                // البحث عن تعديلات
+                let override = overrides.find(o => o.subject === t.subject && (o.group === group || o.group === sec));
                 
-                todayLectures.push({ 
-                    subject: t.subject, 
-                    doctor: t.name, 
-                    time: activeTime, 
-                    place: activePlace, 
-                    cancelled: cancelled,
-                    modified: isModified
-                });
+                let activeDay = override ? override.newDay : l.day;
+                let activeTime = override ? override.newTime : l.time;
+                let activePlace = override ? override.newPlace : l.place;
+                let isModified = !!override;
+
+                if(activeDay === day){
+                    let cancelled = posts.some(p=>p.type==="cancel" && p.subject===t.subject && p.day===day && (p.group===group || p.group===sec));
+                    
+                    let statusObj = sectionStatuses.find(s => s.subject === t.subject && (s.group === group || s.group === sec));
+                    let currentStatus = statusObj ? statusObj.status : "Offline"; 
+                    
+                    if(currentStatus === "Cancelled") cancelled = true;
+
+                    todayLectures.push({ 
+                        subject: t.subject, 
+                        doctor: t.name, 
+                        time: activeTime, 
+                        place: activePlace, 
+                        cancelled: cancelled,
+                        modified: isModified,
+                        status: currentStatus,
+                        type: t.role === 'doctor' ? 'Lecture' : 'Section'
+                    });
+                }
             }
         });
     });
@@ -707,23 +1357,44 @@ function updateStudentSchedule(){
         return;
     }
 
+    // ترتيب المحاضرات حسب الوقت (اختياري)
+    todayLectures.sort((a,b) => a.time.localeCompare(b.time));
+
     box.innerHTML="";
     todayLectures.forEach(l=>{
         let statusBadge = "";
-        if(l.cancelled) statusBadge = '<span style="color:var(--danger); font-weight:bold;"><i class="fa-solid fa-ban"></i> ملغية</span>';
-        else if(l.modified) statusBadge = '<span style="color:var(--warning); font-weight:bold;"><i class="fa-solid fa-pen"></i> تم تعديل الميعاد</span>';
+        let rowClass = "";
+        let typeBadge = l.type === 'Lecture' ? '<span class="tag" style="background:#e0f2fe; color:#0369a1">محاضرة</span>' : '<span class="tag" style="background:#f0fdf4; color:#15803d">سكشن</span>';
+
+        if(l.cancelled) {
+            statusBadge = '<span style="color:var(--danger); font-weight:bold;"><i class="fa-solid fa-ban"></i> ملغية</span>';
+            rowClass = "cancelled";
+        }
+        else if(l.status === "Online") {
+            statusBadge = '<span class="tag" style="background:#8b5cf6; color:white;"><i class="fa-solid fa-wifi"></i> Online</span>';
+            rowClass = "online-section";
+        }
+        else if(l.modified) {
+            statusBadge = '<span style="color:var(--warning); font-weight:bold;"><i class="fa-solid fa-pen"></i> تم تعديل الميعاد</span>';
+            rowClass = "modified-time";
+        }
+
+        let displayPlace = l.status === "Online" ? "Microsoft Teams / Zoom" : l.place;
 
         box.innerHTML+=`
-        <div class="schedule-row ${l.cancelled?"cancelled":""} ${l.modified && !l.cancelled?"modified-time":""}">
+        <div class="schedule-row ${rowClass}">
             <div style="width:100%">
                 <div style="display:flex; justify-content:space-between;">
-                    <b>${l.subject}</b>
+                    <div style="display:flex; align-items:center">
+                        ${typeBadge}
+                        <b>${l.subject}</b>
+                    </div>
                     ${statusBadge}
                 </div>
                 
                 <div class="meta-info">
                     <span><i class="fa-regular fa-clock"></i> ${l.time}</span>
-                    <span><i class="fa-solid fa-location-dot"></i> ${l.place}</span>
+                    <span><i class="fa-solid fa-location-dot"></i> ${displayPlace}</span>
                 </div>
                 
                 <div style="margin-top:12px; padding-top:10px; border-top:1px solid #f1f5f9; font-size:0.95rem; color:var(--primary);">
@@ -759,9 +1430,19 @@ function renderStudentPosts(){
         if(p.type === "task"){
             let isSubmitted = submissions.some(s => s.taskId === p.id && s.studentId === currentUser.id);
             if(isSubmitted){
-                actionBtn = `<button class="btn btn-task-submit" disabled><i class="fa-solid fa-check"></i> تم التسليم</button>`;
+                actionBtn = `<div class="done-badge">✅ تم التسليم</div>`;
             } else {
-                actionBtn = `<button class="btn btn-task-submit" onclick="submitTask(${p.id})"><i class="fa-solid fa-upload"></i> تسليم المشروع</button>`;}}
+                actionBtn = `
+                <div class="upload-area">
+                    <label style="cursor:pointer; display:block">
+                        <input type="file" id="file-${p.id}" style="display:none" onchange="uploadTask(${p.id})">
+                        <i class="fa-solid fa-cloud-arrow-up" style="font-size:2rem; color:#94a3b8"></i><br>
+                        اضغط هنا لرفع الملف
+                    </label>
+                </div>`;
+            }
+        }
+        
         box.innerHTML+=`
             <div class="schedule-row" style="border-right-color:${color}">
                 <div style="width:100%">
@@ -775,39 +1456,46 @@ function renderStudentPosts(){
                     </div>
                     <p style="margin:12px 0; font-size:1.05rem; color:#334155; line-height:1.6">${p.desc}</p>
                     
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:15px; border-top:1px solid #f1f5f9; padding-top:10px;">
-                        <span style="font-size:0.8rem; color:#94a3b8;"><i class="fa-solid fa-user-pen"></i> ${p.author}</span>
+                    <div style="margin-top:15px; border-top:1px solid #f1f5f9; padding-top:10px;">
                         ${actionBtn}
+                        <div style="font-size:0.8rem; color:#94a3b8; margin-top:5px;"><i class="fa-solid fa-user-pen"></i> ${p.author}</div>
                     </div>
                 </div>
             </div>
-        `;   });}
-function submitTask(taskId){
-    Swal.fire({
-        title: 'تأكيد التسليم',
-        text: "سيتم تسجيل اسمك ووقت التسليم للدكتور. هل أنت متأكد؟",
-        icon: 'question',
-        showCancelButton: true,
-        confirmButtonText: 'نعم، تسليم',
-        cancelButtonText: 'إلغاء'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            let submissions = JSON.parse(localStorage.getItem("smart_submissions"));
-            let now = new Date();
-            let timeString = now.toLocaleDateString('ar-EG') + ' ' + now.toLocaleTimeString('ar-EG');
-            
-            submissions.push({
-                taskId: taskId,
-                studentId: currentUser.id,
-                studentName: currentUser.name,
-                time: timeString
-            });           
-            localStorage.setItem("smart_submissions", JSON.stringify(submissions));
-            Swal.fire('تم التسليم!', 'وصل المشروع للدكتور بنجاح.', 'success');
-            renderStudentPosts();
-        }
-    })
+        `;
+    });
 }
+
+function uploadTask(taskId){
+    const fileInput = document.getElementById('file-' + taskId);
+    const file = fileInput.files[0];
+
+    if(!file) return Swal.fire('تنبيه', 'يرجى اختيار ملف أولاً', 'warning');
+    if(file.size > 500000) return Swal.fire('خطأ', 'حجم الملف كبير جداً (الحد الأقصى 500KB)', 'error');
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const base64Data = e.target.result;
+        let submissions = JSON.parse(localStorage.getItem("smart_submissions"));
+        let now = new Date();
+        let timeString = now.toLocaleDateString('ar-EG') + ' ' + now.toLocaleTimeString('ar-EG');
+        
+        submissions.push({
+            taskId: taskId,
+            studentId: currentUser.id,
+            studentName: currentUser.name,
+            fileName: file.name,
+            fileData: base64Data,
+            time: timeString
+        });
+        
+        localStorage.setItem("smart_submissions", JSON.stringify(submissions));
+        Swal.fire('تم التسليم!', 'تم رفع الملف وتسجيل اسمك بنجاح.', 'success');
+        renderStudentPosts();
+    };
+    reader.readAsDataURL(file);
+}
+
 function logout(){
     Swal.fire({
         title: 'تسجيل خروج',
