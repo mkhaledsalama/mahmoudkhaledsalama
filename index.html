@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Smart Schedule | النظام الأكاديمي</title>
+<title>Daily Tracker System</title>
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
@@ -11,22 +11,19 @@
 <style>
     :root {
         --primary: #4338ca;
-        --primary-light: #6366f1;
-        --secondary: #0ea5e9;
-        --dark-bg: #0f172a;
-        --surface: #ffffff;
-        --text-main: #1e293b;
-        --text-sub: #64748b;
-        --danger: #ef4444;
-        --success: #10b981;
-        --warning: #f59e0b;
-        --shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
-        --radius: 18px;
+        --text-main: #fff;
+        --glass-border: rgba(255, 255, 255, 0.4);
+        --glass-bg: rgba(255, 255, 255, 0.1);
+        --btn-blue: #0ea5e9;
+        --btn-orange: #f59e0b;
+        --btn-purple: #8b5cf6;
     }
     * { box-sizing: border-box; outline: none; }
+    
     body {
         font-family: 'Tajawal', sans-serif;
-        background: radial-gradient(circle at top right, #1e1b4b, #312e81, #0f172a);
+        /* الخلفية المتدرجة */
+        background: radial-gradient(circle at 50% 100%, #854d0e, #1e1b4b 40%, #020617 80%);
         min-height: 100vh;
         margin: 0;
         display: flex;
@@ -34,338 +31,374 @@
         justify-content: center;
         padding: 20px;
         color: var(--text-main);
-    }
-    .container {
-        background: rgba(255, 255, 255, 0.96);
-        width: 100%;
-        max-width: 1000px;
-        border-radius: 24px;
-        padding: 40px;
-        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-        position: relative;
-        overflow: hidden;
-        border: 1px solid rgba(255,255,255,0.3);
-        animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        overflow-x: hidden;
     }
 
-    @keyframes slideUp {
-        from { opacity: 0; transform: translateY(40px); }
+    /* حاوية الزجاج الرئيسية */
+    .glass-container {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        border: 2px solid rgba(255, 255, 255, 0.2);
+        border-top: 2px solid rgba(255, 255, 255, 0.5);
+        border-bottom: 2px solid rgba(255, 255, 255, 0.05);
+        border-radius: 80px;
+        padding: 40px 60px;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(255,255,255,0.05);
+        width: 100%;
+        max-width: 900px;
+        position: relative;
+        text-align: center;
+        animation: fadeIn 1s ease-out;
+    }
+
+    .glass-container::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 10%; right: 10%;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent);
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
         to { opacity: 1; transform: translateY(0); }
     }
 
-    h1, h2, h3 { margin-top: 0; font-weight: 800; letter-spacing: -0.5px; }
-    h1 { 
-        font-size: 2.5rem; 
-        text-align: center; 
-        margin-bottom: 40px; 
-        background: linear-gradient(135deg, var(--primary), var(--secondary)); 
-        -webkit-background-clip: text; 
-        -webkit-text-fill-color: transparent; 
-    }
-    
-    h3 { font-size: 1.2rem; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
-    h3 i { color: var(--primary); }
-
-    .btn {
-        border: none;
-        padding: 18px 30px;
-        border-radius: 14px;
-        font-size: 1.1rem;
+    h1.main-title { 
+        font-size: 2.8rem; 
+        margin-bottom: 50px; 
+        color: #fff;
+        text-shadow: 0 0 10px rgba(255,255,255,0.3);
         font-weight: 700;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        display: inline-flex;
+        letter-spacing: 1px;
+        display: flex;
         align-items: center;
         justify-content: center;
-        gap: 12px;
-        color: white;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-        width: 100%;
+        gap: 15px;
+    }
+    
+    h1.main-title i { font-size: 2.2rem; }
+
+    .circle-btn-container {
+        display: flex;
+        justify-content: center;
+        gap: 40px;
+        flex-wrap: wrap;
+        margin-bottom: 20px;
+    }
+
+    .circle-btn {
+        width: 140px;
+        height: 140px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.03);
+        border: 2px solid rgba(255,255,255,0.1);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         position: relative;
         overflow: hidden;
+        backdrop-filter: blur(5px);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3), inset 0 0 20px rgba(255,255,255,0.02);
     }
 
-    .btn::after {
-        content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-        background: linear-gradient(rgba(255,255,255,0.2), transparent);
-        opacity: 0; transition: 0.2s;
+    .circle-btn i {
+        font-size: 2.5rem;
+        margin-bottom: 10px;
+        color: #fff;
+        z-index: 2;
     }
-    .btn:hover { transform: translateY(-3px); box-shadow: 0 12px 20px -8px rgba(0,0,0,0.3); }
-    .btn:hover::after { opacity: 1; }
 
-    .btn-doc { background: linear-gradient(135deg, #1e293b, #334155); }
-    .btn-eng { background: linear-gradient(135deg, #059669, #10b981); }
-    .btn-stu { background: linear-gradient(135deg, #2563eb, #3b82f6); }
-    
-    .btn-submit { background: linear-gradient(135deg, var(--primary), var(--primary-light)); margin-top: 15px; font-size: 1.2rem;}
-    .btn-danger { background: linear-gradient(135deg, #b91c1c, #ef4444); width: auto; padding: 10px 20px; font-size: 0.9rem; border-radius: 10px;}
-    .btn-warning { background: linear-gradient(135deg, #d97706, #f59e0b); color: white; }
-    
-    .btn-view-file {
-        background: #fff; color: var(--primary); border: 1px solid var(--primary);
-        padding: 5px 15px; font-size: 0.85rem; border-radius: 8px; width: auto; cursor: pointer;
+    .circle-btn span {
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: #fff; 
+        z-index: 2;
     }
-    .btn-view-file:hover { background: var(--primary); color: #fff; }
 
-    .btn-logout { background: #f1f5f9; color: #64748b; margin-top: 40px; width: 100%; border: 2px solid #e2e8f0; box-shadow: none;}
-    .btn-logout:hover { background: #e2e8f0; color: #ef4444; border-color: #ef4444; }
+    .btn-student { border-color: var(--btn-blue); box-shadow: 0 0 15px var(--btn-blue), inset 0 0 10px rgba(14, 165, 233, 0.2); }
+    .btn-assistant { border-color: var(--btn-orange); box-shadow: 0 0 15px var(--btn-orange), inset 0 0 10px rgba(245, 158, 11, 0.2); }
+    .btn-doctor { border-color: var(--btn-purple); box-shadow: 0 0 15px var(--btn-purple), inset 0 0 10px rgba(139, 92, 246, 0.2); }
 
-    .role-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 25px; margin-top: 30px; }
-
-    label { display: block; margin-bottom: 8px; font-weight: 700; color: var(--text-main); font-size: 0.95rem; }
-    input, select, textarea {
-        width: 100%; padding: 18px; border-radius: 14px; border: 2px solid #e2e8f0; background: #f8fafc;
-        font-size: 1.05rem; font-family: inherit; transition: 0.3s; margin-bottom: 25px; color: var(--text-main);
+    .circle-btn:hover {
+        transform: translateY(-10px) scale(1.05);
     }
-    input:focus, select:focus, textarea:focus { border-color: var(--primary); background: white; box-shadow: 0 0 0 4px rgba(67, 56, 202, 0.15); }
+    .btn-student:hover { background: rgba(14, 165, 233, 0.15); box-shadow: 0 0 30px var(--btn-blue); }
+    .btn-assistant:hover { background: rgba(245, 158, 11, 0.15); box-shadow: 0 0 30px var(--btn-orange); }
+    .btn-doctor:hover { background: rgba(139, 92, 246, 0.15); box-shadow: 0 0 30px var(--btn-purple); }
 
-    .schedule-row {
-        background: white; padding: 24px; border-radius: 16px; margin-bottom: 20px;
-        display: flex; flex-direction: column;
-        border: 1px solid #f1f5f9; border-right: 6px solid var(--primary);
-        box-shadow: 0 4px 6px -2px rgba(0,0,0,0.03); transition: transform 0.2s, box-shadow 0.2s;
-        position: relative; overflow: hidden;
-    }
-    .schedule-row:hover { transform: translateX(-5px); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.08); }
-    
-    .row-header { display: flex; justify-content: space-between; align-items: flex-start; width: 100%; }
-
-    .schedule-row b { font-size: 1.2rem; color: var(--text-main); display: block; margin-bottom: 6px; }
-    .schedule-row span { font-size: 0.9rem; color: var(--text-sub); }
-    
-    .meta-info { display: flex; gap: 15px; margin-top: 8px; font-size: 0.9rem; color: #475569; font-weight: 500; }
-    .meta-info i { color: var(--secondary); }
-
-    .cancelled { border-right-color: var(--danger) !important; background: #fef2f2 !important; }
-    .cancelled b { text-decoration: line-through; color: #991b1b !important; }
-    
-    .online-section { border-right: 5px solid #8b5cf6 !important; background: #f5f3ff !important; }
-    .merged-section { border-right: 5px solid #ec4899 !important; background: #fdf2f8 !important; }
-    .modified-time { border-right-color: var(--warning) !important; background: #fffbeb !important; }
-
-    .tag { padding: 4px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; margin-right: 10px; }
-    .tag-quiz { background: #fee2e2; color: #dc2626; }
-    .tag-task { background: #dbeafe; color: #2563eb; }
-    .tag-exam { background: #fef3c7; color: #d97706; }
-
-    .dashboard { display: none; animation: fadeIn 0.5s; }
-    .hidden { display: none; }
-
-    .submissions-list {
-        background: #f8fafc; border: 1px solid #e2e8f0; padding: 15px; border-radius: 12px; margin-top: 15px; max-height: 200px; overflow-y: auto; width: 100%;
-    }
-    .sub-item { display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #cbd5e1; font-size: 0.9rem; margin-bottom: 5px; background: #fff; border-radius: 8px; }
-
-    .student-info-header {
-        background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+    .login-form {
+        max-width: 400px;
+        margin: 0 auto;
         padding: 20px;
-        border-radius: 15px;
-        margin-bottom: 25px;
-        border: 1px solid #bae6fd;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+        display: none; 
     }
-    .student-info-header h4 { margin: 0; color: #0284c7; font-size: 1.1rem; }
-    .student-info-header p { margin: 5px 0 0; color: #1e293b; font-weight: bold; font-size: 1.3rem; }
 
-    .upload-area {
-        border: 2px dashed #cbd5e1; padding: 20px; text-align: center; border-radius: 14px;
-        cursor: pointer; background: #f8fafc; transition: 0.3s; margin-top: 15px;
+    .input-glass {
+        width: 100%;
+        padding: 15px 45px 15px 20px;
+        border-radius: 30px;
+        border: 1px solid rgba(255,255,255,0.3);
+        background: rgba(0,0,0,0.3);
+        color: white;
+        font-size: 1.1rem;
+        margin-bottom: 20px;
+        font-family: 'Tajawal', sans-serif;
     }
-    .upload-area:hover { border-color: var(--primary); background: #eef2ff; }
-    .done-badge { background: var(--success); color: white; padding: 8px 20px; border-radius: 20px; display: inline-block; font-weight: bold; margin-top: 10px; }
+    .input-glass:focus { border-color: var(--btn-blue); background: rgba(0,0,0,0.5); }
+    
+    .btn-submit-glass {
+        width: 100%;
+        padding: 15px;
+        border-radius: 30px;
+        border: none;
+        background: linear-gradient(90deg, var(--btn-blue), #3b82f6);
+        color: white;
+        font-size: 1.2rem;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+    .btn-submit-glass:hover { transform: scale(1.02); box-shadow: 0 0 20px var(--btn-blue); }
 
-    @media (min-width: 768px) {
-        .container { padding: 60px; }
-        .btn-danger { width: auto; }
-        .grid-2 { grid-template-columns: 1fr 1fr; }
+    .back-btn {
+        background: none; border: none; color: rgba(255,255,255,0.7);
+        cursor: pointer; font-size: 1rem; margin-bottom: 20px;
+    }
+    .back-btn:hover { color: white; }
+
+    .dashboard {
+        background: #f8fafc;
+        border-radius: 24px;
+        padding: 30px;
+        color: #1e293b;
+        text-align: right;
+        display: none; 
+        width: 100%;
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+    
+    .dashboard h1, .dashboard h2, .dashboard h3, .dashboard label { color: #1e293b; }
+    .dashboard input, .dashboard select, .dashboard textarea { 
+        background: #fff; border: 1px solid #cbd5e1; color: #1e293b; 
+    }
+
+    .hidden { display: none !important; }
+
+    .btn-action {
+        border: none; padding: 15px; border-radius: 12px; color: white; cursor: pointer;
+        font-family: 'Tajawal'; font-weight: bold; margin-top: 10px; width: 100%;
+    }
+    .btn-logout { background: #fee2e2; color: #991b1b; border: 1px solid #ef4444; margin-top: 30px;}
+    .schedule-row { background: white; padding: 20px; border-radius: 12px; margin-bottom: 15px; border-right: 5px solid #ccc; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+    .tag { padding: 3px 8px; border-radius: 4px; font-size: 0.8rem; margin-right: 5px; }
+
+    @media (max-width: 768px) {
+        .glass-container { border-radius: 40px; padding: 30px 20px; }
+        .circle-btn { width: 110px; height: 110px; }
+        .circle-btn i { font-size: 2rem; }
+        .circle-btn span { font-size: 1rem; }
+        h1.main-title { font-size: 2rem; }
     }
 </style>
 </head>
 
 <body>
 
-<div class="container">
-
-    <div id="login-screen">
-        <h1><i class="fa-solid fa-layer-group"></i> النظام الأكاديمي المطور</h1>
+<div class="glass-container" id="landing-container">
+    <div id="login-selection">
+        <h1 class="main-title">
+            <i class="fa-solid fa-graduation-cap"></i>
+            Daily Tracker System
+        </h1>
         
-        <div id="role-buttons" class="role-grid">
-            <button class="btn btn-doc" onclick="openLogin('doctor')">
-                <i class="fa-solid fa-user-tie"></i> دكتور
-            </button>
-            <button class="btn btn-eng" onclick="openLogin('assistant')">
-                <i class="fa-solid fa-clipboard-user"></i> هيئة معاونة
-            </button>
-            <button class="btn btn-stu" onclick="openLogin('student')">
-                <i class="fa-solid fa-graduation-cap"></i> طالب
-            </button>
-        </div>
-
-        <div id="login-input" class="hidden" style="max-width: 450px; margin: 40px auto;">
-            <div style="text-align: center; margin-bottom: 25px;">
-                <button onclick="backToRoles()" style="background:none; border:none; cursor:pointer; color:var(--text-sub); font-size:1.1rem; font-family:inherit; font-weight:600;">
-                    <i class="fa-solid fa-arrow-right"></i> رجوع للقائمة
-                </button>
-            </div>
-            <h3 id="role-title" style="justify-content:center; border:none; font-size:1.6rem; color:var(--primary);"></h3>
-            
-            <div style="position:relative;">
-                <input id="user-code" placeholder="أدخل الكود التعريفي" type="number" style="padding-right: 20px;">
-                <i class="fa-solid fa-lock" style="position:absolute; left:20px; top:22px; color:#cbd5e1;"></i>
+        <div class="circle-btn-container">
+            <div class="circle-btn btn-student" onclick="openLogin('student')">
+                <i class="fa-solid fa-user-graduate"></i>
+                <span>طالب</span>
             </div>
 
-            <button class="btn btn-submit" onclick="performLogin()">
-                تسجيل الدخول
-            </button>
+            <div class="circle-btn btn-assistant" onclick="openLogin('assistant')">
+                <i class="fa-solid fa-user-tie"></i>
+                <span>المعيد</span>
+            </div>
+
+            <div class="circle-btn btn-doctor" onclick="openLogin('doctor')">
+                <i class="fa-solid fa-chalkboard-user"></i>
+                <span>دكتور</span>
+            </div>
         </div>
     </div>
 
-    <div id="staff-dashboard" class="dashboard">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:30px;">
-            <h2 id="staff-title" style="margin:0; font-size:1.8rem;"></h2>
-            <div style="background:#e0e7ff; color:var(--primary); padding:8px 15px; border-radius:30px; font-weight:bold; font-size:0.9rem;">
-                <i class="fa-solid fa-circle-check"></i> حساب موثق
-            </div>
+    <div id="login-input" class="login-form">
+        <button class="back-btn" onclick="backToRoles()">
+            <i class="fa-solid fa-arrow-right"></i> رجوع للقائمة
+        </button>
+        
+        <h3 id="role-title" style="color: white; margin-bottom: 20px; font-size: 1.5rem;"></h3>
+        
+        <div style="position:relative;">
+            <input id="user-code" class="input-glass" placeholder="أدخل الكود التعريفي" type="number">
+            <i class="fa-solid fa-lock" style="position:absolute; left:20px; top:20px; color:rgba(255,255,255,0.6);"></i>
         </div>
 
-        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap:30px;">
-            
-            <div id="assistant-status-card" class="hidden" style="background: #fff; padding:30px; border-radius:20px; border:1px solid #e2e8f0; box-shadow:0 10px 15px -3px rgba(0,0,0,0.05); border-right: 5px solid #8b5cf6;">
-                <h3 style="color:#7c3aed"><i class="fa-solid fa-toggle-on"></i> حالة السكشن</h3>
-                <label>تحديد الحالة:</label>
-                <select id="section-status-type">
-                    <option value="Offline">في الكلية (Offline)</option>
-                    <option value="Online">أونلاين (عن بعد)</option>
-                    <option value="Cancelled">ملغي</option>
-                </select>
-                <label>للجروب/السكشن:</label>
-                <select id="status-group">
-                    <script>
-                        for(let i=1;i<=13;i++) document.write(`<option value="${i}">${i}</option>`);
-                    </script>
-                </select>
-                <button class="btn" style="background:#8b5cf6; width:100%" onclick="updateSectionStatus()">تحديث الحالة</button>
-            </div>
-
-            <div style="background: #fff; padding:30px; border-radius:20px; border:1px solid #e2e8f0; box-shadow:0 10px 15px -3px rgba(0,0,0,0.05);">
-                <h3 style="color:var(--danger);"><i class="fa-solid fa-ban"></i> إلغاء محاضرة</h3>
-                <label>اختر اليوم:</label>
-                <select id="staff-cancel-day"></select>
-                <label>اختر الجروب:</label>
-                <select id="staff-cancel-group"></select>
-                <button class="btn btn-danger" onclick="staffCancel()" style="width:100%; margin-top:10px;">تأكيد الإلغاء</button>
-            </div>
-
-            <div style="background: #fff; padding:30px; border-radius:20px; border:1px solid #e2e8f0; box-shadow:0 10px 15px -3px rgba(0,0,0,0.05);">
-                <h3 style="color:var(--warning);"><i class="fa-solid fa-clock-rotate-left"></i> تعديل / ضم</h3>
-                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-                    <div>
-                        <label>اليوم:</label>
-                        <select id="reschedule-day">
-                            <option>السبت</option><option>الأحد</option><option>الاثنين</option><option>الثلاثاء</option><option>الأربعاء</option><option>الخميس</option><option>الجمعة</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label>الوقت:</label>
-                        <input type="time" id="reschedule-time">
-                    </div>
-                </div>
-                <label>القاعة / المدرج:</label>
-                <input type="text" id="reschedule-place" placeholder="المكان الجديد...">
-                <label>الجروب المستهدف:</label>
-                <select id="reschedule-group">
-                    <option value="1">جروب 1</option>
-                    <option value="2">جروب 2</option>
-                </select>
-                <button class="btn btn-warning" onclick="staffReschedule()" style="width:100%; margin-top:10px; color:white;">حفظ التعديل</button>
-            </div>
-
-            <div style="background: #fff; padding:30px; border-radius:20px; border:1px solid #e2e8f0; box-shadow:0 10px 15px -3px rgba(0,0,0,0.05); grid-column: 1 / -1;">
-                <h3><i class="fa-solid fa-pen-nib"></i> إضافة تنبيه / تكليف</h3>
-                <div style="display:grid; grid-template-columns: 1fr 2fr; gap:15px;">
-                    <select id="task-type">
-                        <option value="task">تاسك (تسليم ملف)</option>
-                        <option value="quiz">كويز (Quiz)</option>
-                        <option value="exam">امتحان</option>
-                        <option value="note">تنويه عام</option>
-                    </select>
-                    <input id="task-date" type="date">
-                </div>
-                <textarea id="task-desc" rows="2" placeholder="اكتب تفاصيل التنبيه بوضوح..."></textarea>
-                <button class="btn btn-submit" onclick="staffAddTask()" style="background:var(--secondary); margin-top:0;">نشر فوراً</button>
-            </div>
-        </div>
-
-        <div style="margin-top: 50px;">
-            <h3><i class="fa-solid fa-list-check"></i> المنشورات والتسليمات الحالية</h3>
-            <div id="staff-posts"></div>
-        </div>
-
-        <button class="btn btn-logout" onclick="logout()">
-            تسجيل خروج
+        <button class="btn-submit-glass" onclick="performLogin()">
+            تسجيل الدخول
         </button>
     </div>
+</div>
 
-    <div id="student-dashboard" class="dashboard">
-        <h2 id="stu-title" style="margin-bottom:20px; font-size:2rem; text-align:center; color:var(--primary);"></h2>
-
-        <div class="student-info-header">
-            <div>
-                <h4><i class="fa-solid fa-user"></i> الطالب:</h4>
-                <p id="info-stu-name">...</p>
-            </div>
-            <div style="text-align: left;">
-                <h4><i class="fa-solid fa-layer-group"></i> السكشن:</h4>
-                <p id="info-stu-sec">...</p>
-            </div>
+<div id="staff-dashboard" class="dashboard">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:30px;">
+        <h2 id="staff-title" style="margin:0; font-size:1.8rem; color:#4338ca;"></h2>
+        <div style="background:#e0e7ff; color:#4338ca; padding:8px 15px; border-radius:30px; font-weight:bold; font-size:0.9rem;">
+            <i class="fa-solid fa-circle-check"></i> حساب موثق
         </div>
-
-        <div style="background: #fff; padding:30px; border-radius:20px; margin-bottom:40px; border:1px solid #e2e8f0; box-shadow:0 10px 15px -3px rgba(0,0,0,0.05);">
-            <div class="role-grid" style="margin-top:0;">
-                
-                <input type="hidden" id="stu-section">
-
-                <div style="grid-column: 1 / -1;">
-                    <label style="text-align:center; font-size:1.1rem; margin-bottom:15px;">اختر اليوم لعرض الجدول والمهام:</label>
-                    <select id="stu-day" onchange="updateStudentSchedule()" style="text-align:center; font-weight:bold; font-size:1.1rem;">
-                        <option value="">-- اختر اليوم --</option>
-                        <option>السبت</option>
-                        <option>الأحد</option>
-                        <option>الاثنين</option>
-                        <option>الثلاثاء</option>
-                        <option>الأربعاء</option>
-                        <option>الخميس</option>
-                        <option>الجمعة</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-
-        <h3><i class="fa-regular fa-calendar-days"></i> جدول المحاضرات والسكاشن</h3>
-        <div id="stu-schedule">
-            <div style="text-align:center; padding:40px; background:#f8fafc; border-radius:16px; border:2px dashed #cbd5e1;">
-                <i class="fa-solid fa-hand-pointer" style="font-size:2rem; color:#cbd5e1; margin-bottom:10px;"></i>
-                <p style="color:#64748b; margin:0;">الرجاء اختيار اليوم</p>
-            </div>
-        </div>
-
-        <h3 style="margin-top:40px;"><i class="fa-solid fa-bell"></i> المهام والتنبيهات</h3>
-        <div id="stu-posts"></div>
-
-        <button class="btn btn-logout" onclick="logout()">
-            تسجيل خروج
-        </button>
     </div>
 
+    <div style="background: #f8fafc; border-radius: 15px; padding: 25px; margin-bottom: 25px; border-right: 6px solid #0ea5e9; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+        
+        <div style="text-align: right; flex: 2; min-width: 280px; padding-left: 20px;">
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
+                <h3 style="margin: 0; color: #1e293b; font-size: 1.4rem;">
+                    <i class="fa-solid fa-user-tie" style="color: #4338ca; margin-left: 5px;"></i>
+                    <span id="card-user-name"></span>
+                </h3>
+                <span id="card-subject" style="background: #e0e7ff; color: #4338ca; padding: 4px 12px; border-radius: 6px; font-size: 0.9rem; font-weight: bold;"></span>
+            </div>
+            
+            <label style="font-size: 1rem; color: #64748b; display: block; margin-bottom: 8px; font-weight: 500;">
+                اختر من جدولك لعرض التفاصيل الأساسية:
+            </label>
+            <select id="details-selector" onchange="updateBasicDetails()" 
+                    style="width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #cbd5e1; font-family: 'Tajawal'; font-size: 1rem; color: #334155; outline: none; transition: 0.3s;">
+                </select>
+        </div>
+
+        <div style="display: flex; gap: 15px; flex: 1; justify-content: flex-end; min-width: 250px; margin-top: 15px;">
+            
+            <div style="text-align: center; border: 1px solid #e2e8f0; border-radius: 12px; padding: 15px 25px; background: white; min-width: 110px; box-shadow: 0 2px 5px rgba(0,0,0,0.03);">
+                <small style="color: #94a3b8; display: block; margin-bottom: 5px; font-weight: 500;">الوقت الأساسي</small>
+                <div id="display-time" style="color: #0ea5e9; font-weight: 800; font-size: 1.4rem; direction: ltr;">--:--</div>
+            </div>
+
+            <div style="text-align: center; border: 1px solid #e2e8f0; border-radius: 12px; padding: 15px 25px; background: white; min-width: 110px; box-shadow: 0 2px 5px rgba(0,0,0,0.03);">
+                <small style="color: #94a3b8; display: block; margin-bottom: 5px; font-weight: 500;">القاعة الأساسية</small>
+                <div id="display-place" style="color: #0ea5e9; font-weight: 800; font-size: 1.4rem;">---</div>
+            </div>
+
+        </div>
+    </div>
+    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:20px;">
+        
+        <div id="assistant-status-card" class="hidden" style="background: #fff; padding:20px; border-radius:15px; border:1px solid #e2e8f0;">
+            <h3 style="color:#7c3aed; margin-top:0"><i class="fa-solid fa-toggle-on"></i> حالة السكشن</h3>
+            <label>تحديد الحالة:</label>
+            <select id="section-status-type" style="width:100%; padding:10px; margin:10px 0; border-radius:8px;">
+                <option value="Offline">في الكلية (Offline)</option>
+                <option value="Online">أونلاين (عن بعد)</option>
+                <option value="Cancelled">ملغي</option>
+            </select>
+            <label>للجروب/السكشن:</label>
+            <select id="status-group" style="width:100%; padding:10px; margin:10px 0; border-radius:8px;">
+                <script>for(let i=1;i<=13;i++) document.write(`<option value="${i}">${i}</option>`);</script>
+            </select>
+            <button class="btn-action" style="background:#8b5cf6;" onclick="updateSectionStatus()">تحديث الحالة</button>
+        </div>
+
+        <div style="background: #fff; padding:20px; border-radius:15px; border:1px solid #e2e8f0;">
+            <h3 style="color:#ef4444; margin-top:0"><i class="fa-solid fa-ban"></i> إلغاء محاضرة</h3>
+            <select id="staff-cancel-day" style="width:100%; padding:10px; margin-bottom:10px; border-radius:8px;"></select>
+            <select id="staff-cancel-group" style="width:100%; padding:10px; border-radius:8px;"></select>
+            <button class="btn-action" style="background:#ef4444;" onclick="staffCancel()">تأكيد الإلغاء</button>
+        </div>
+
+        <div style="background: #fff; padding:20px; border-radius:15px; border:1px solid #e2e8f0;">
+            <h3 style="color:#f59e0b; margin-top:0"><i class="fa-solid fa-clock-rotate-left"></i> تعديل / ضم</h3>
+            <div style="display:flex; gap:10px;">
+                <select id="reschedule-day" style="flex:1; padding:10px; border-radius:8px;">
+                    <option>السبت</option><option>الأحد</option><option>الاثنين</option><option>الثلاثاء</option><option>الأربعاء</option><option>الخميس</option><option>الجمعة</option>
+                </select>
+                <input type="time" id="reschedule-time" style="flex:1; padding:10px; border-radius:8px;">
+            </div>
+            <input type="text" id="reschedule-place" placeholder="المكان الجديد..." style="width:100%; padding:10px; margin:10px 0; border-radius:8px;">
+            <select id="reschedule-group" style="width:100%; padding:10px; border-radius:8px;">
+                <option value="1">جروب 1</option><option value="2">جروب 2</option>
+            </select>
+            <button class="btn-action" style="background:#f59e0b;" onclick="staffReschedule()">حفظ التعديل</button>
+        </div>
+
+        <div style="background: #fff; padding:20px; border-radius:15px; border:1px solid #e2e8f0; grid-column: 1 / -1;">
+            <h3 style="margin-top:0"><i class="fa-solid fa-pen-nib"></i> إضافة تنبيه / تكليف</h3>
+            <div style="display:flex; gap:10px; margin-bottom:10px;">
+                <select id="task-type" style="padding:10px; border-radius:8px;">
+                    <option value="task">تاسك (تسليم ملف)</option>
+                    <option value="quiz">كويز (Quiz)</option>
+                    <option value="exam">امتحان</option>
+                    <option value="note">تنويه عام</option>
+                </select>
+                <input id="task-date" type="date" style="padding:10px; border-radius:8px;">
+            </div>
+            <textarea id="task-desc" rows="2" placeholder="اكتب التفاصيل..." style="width:100%; padding:10px; border-radius:8px;"></textarea>
+            <button class="btn-action" style="background:#4338ca;" onclick="staffAddTask()">نشر فوراً</button>
+        </div>
+    </div>
+
+    <div style="margin-top: 40px;">
+        <h3><i class="fa-solid fa-list-check"></i> المنشورات والتسليمات الحالية</h3>
+        <div id="staff-posts"></div>
+    </div>
+
+    <button class="btn-action btn-logout" onclick="logout()">تسجيل خروج</button>
+</div>
+
+<div id="student-dashboard" class="dashboard">
+    <h2 id="stu-title" style="margin-bottom:20px; font-size:2rem; text-align:center; color:#4338ca;"></h2>
+
+    <div style="background: linear-gradient(135deg, #f0f9ff, #e0f2fe); padding: 20px; border-radius: 15px; display: flex; justify-content: space-between; margin-bottom: 25px;">
+        <div>
+            <h4 style="margin:0; color:#0284c7;">الطالب:</h4>
+            <p id="info-stu-name" style="margin:5px 0 0; font-weight:bold; font-size:1.2rem;">...</p>
+        </div>
+        <div style="text-align: left;">
+            <h4 style="margin:0; color:#0284c7;">السكشن:</h4>
+            <p id="info-stu-sec" style="margin:5px 0 0; font-weight:bold; font-size:1.2rem;">...</p>
+        </div>
+    </div>
+
+    <input type="hidden" id="stu-section">
+
+    <div style="text-align:center; margin-bottom:30px;">
+        <label style="font-size:1.1rem;">اختر اليوم لعرض الجدول:</label>
+        <select id="stu-day" onchange="updateStudentSchedule()" style="padding:10px 20px; font-size:1.1rem; border-radius:10px; margin-right:10px;">
+            <option value="">-- اختر اليوم --</option>
+            <option>السبت</option><option>الأحد</option><option>الاثنين</option><option>الثلاثاء</option><option>الأربعاء</option><option>الخميس</option><option>الجمعة</option>
+        </select>
+    </div>
+
+    <h3><i class="fa-regular fa-calendar-days"></i> جدول المحاضرات والسكاشن</h3>
+    <div id="stu-schedule" style="min-height:100px;">
+        <div style="text-align:center; padding:30px; background:#f8fafc; border:2px dashed #cbd5e1; border-radius:10px;">
+            <p style="color:#64748b;">الرجاء اختيار اليوم</p>
+        </div>
+    </div>
+
+    <h3 style="margin-top:40px;"><i class="fa-solid fa-bell"></i> المهام والتنبيهات</h3>
+    <div id="stu-posts"></div>
+
+    <button class="btn-action btn-logout" onclick="logout()">تسجيل خروج</button>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
-// ======================= قاعدة بيانات الطلاب (كاملة) =======================
+// ======================= قاعدة بيانات الطلاب (كاملة كما هي) =======================
 const studentsDB = {
     "2000": { name: "ابرار حمدي محمد محمد حسن", section: 1, group: 1 },
     "2001": { name: "ابراهيم احمد رمضان احمد", section: 1, group: 1 },
@@ -492,7 +525,7 @@ const studentsDB = {
     "2122": { name: "حامد خالد حامد السيد موسى", section: 4, group: 1 },
     "2123": { name: "حبيبة محمد ممدوح محمد", section: 4, group: 1 },
     "2124": { name: "حبيبه حمدى حسن بشیر", section: 4, group: 1 },
-    "2125": { name: "حبیبه رفاعی فاروق سيد عبدالله", section: 4, group: 1 },
+    "2125": { name: "حبيبه رفاعی فاروق سيد عبدالله", section: 4, group: 1 },
     "2126": { name: "حبيبه سمير عبد الحميد ابراهيم", section: 4, group: 1 },
     "2127": { name: "حبيبه صبحي صالح محمد خالد", section: 4, group: 1 },
     "2128": { name: "حبيبه عمرو عثمان رجب عثمان", section: 4, group: 1 },
@@ -1000,7 +1033,6 @@ if (!localStorage.getItem("smart_section_status")) localStorage.setItem("smart_s
 
 function groupFromSection(sec){
     sec = Number(sec);
-    // الدكاترة بيشوفوا مجموعات (1 أو 2)، المعيدين بيشوفوا سكاشن محددة
     return (sec >= 1 && sec <= 7) ? "1" : "2";
 }
 
@@ -1010,8 +1042,7 @@ let selectedRole = null;
 // ====================== LOGIN LOGIC ===============================
 function openLogin(role){
     selectedRole = role;
-    document.getElementById("role-buttons").style.display="none";
-    document.getElementById("login-input").classList.remove("hidden");
+    document.getElementById("login-selection").style.display="none";
     document.getElementById("login-input").style.display="block";
 
     let title = role==="doctor"?"بوابة أعضاء التدريس":
@@ -1021,7 +1052,7 @@ function openLogin(role){
 
 function backToRoles(){
     document.getElementById("login-input").style.display="none";
-    document.getElementById("role-buttons").style.display="grid";
+    document.getElementById("login-selection").style.display="block";
 }
 
 function performLogin(){
@@ -1059,9 +1090,9 @@ function performLogin(){
 
 // ==================== STAFF LOGIC ======================
 function showStaff(){
-    document.getElementById("login-screen").style.display="none";
+    document.getElementById("landing-container").style.display="none";
     document.getElementById("staff-dashboard").style.display="block";
-    document.getElementById("staff-title").innerHTML = `أهلاً، <span style="color:var(--primary)">${currentUser.name}</span>`;
+    document.getElementById("staff-title").innerHTML = `أهلاً، <span style="color:#4338ca">${currentUser.name}</span>`;
 
     if(currentUser.role === 'assistant'){
         document.getElementById("assistant-status-card").classList.remove("hidden");
@@ -1069,8 +1100,45 @@ function showStaff(){
         document.getElementById("assistant-status-card").classList.add("hidden");
     }
 
+    // تهيئة كارت التفاصيل الأساسية
+    initDetailsCard();
+
     loadStaffControls();
     renderStaffPosts();
+}
+
+// دالة جديدة لتهيئة كارت التفاصيل
+function initDetailsCard(){
+    document.getElementById("card-user-name").innerText = currentUser.name;
+    document.getElementById("card-subject").innerText = currentUser.subject;
+
+    let select = document.getElementById("details-selector");
+    select.innerHTML = "";
+
+    currentUser.lectures.forEach((l, index) => {
+        let label = "";
+        if(currentUser.role === 'doctor'){
+            label = `${l.day} - جروب ${l.group}`;
+        } else {
+            label = `${l.day} - سكشن ${l.group}`;
+        }
+        select.innerHTML += `<option value="${index}">${label}</option>`;
+    });
+
+    // تحديث البيانات لأول عنصر افتراضياً
+    updateBasicDetails();
+}
+
+// دالة لتحديث الوقت والقاعة عند تغيير القائمة
+function updateBasicDetails(){
+    let select = document.getElementById("details-selector");
+    let index = select.value;
+    let lecture = currentUser.lectures[index];
+
+    if(lecture){
+        document.getElementById("display-time").innerText = lecture.time;
+        document.getElementById("display-place").innerText = lecture.place;
+    }
 }
 
 function loadStaffControls(){
@@ -1082,26 +1150,44 @@ function loadStaffControls(){
     currentUser.lectures.forEach(l => days.add(l.day));
     days.forEach(d => daySel.innerHTML+=`<option>${d}</option>`);
     
-    // لو الدكتور (جروبات 1 و 2)، لو معيد (سكاشن محددة)
     if(currentUser.role === 'doctor'){
         grpSel.innerHTML = `<option value="1">جروب 1</option><option value="2">جروب 2</option>`;
     } else {
-        // للمعيد نعرض السكاشن اللي بيدرسلها فقط
-        currentUser.lectures.forEach(l => {
-            grpSel.innerHTML += `<option value="${l.group}">سكشن ${l.group}</option>`;
+        // Filter for unique group numbers from the assistant's lectures
+        let uniqueGroups = new Set();
+        currentUser.lectures.forEach(l => uniqueGroups.add(l.group));
+        uniqueGroups.forEach(g => {
+            grpSel.innerHTML += `<option value="${g}">سكشن ${g}</option>`;
+        });
+        // Also add the two main groups for doctors to allow assistants to post for the whole section group if needed
+        grpSel.innerHTML += `<option value="1">جروب 1 (عام)</option><option value="2">جروب 2 (عام)</option>`;
+    }
+    
+    // Populate reschedule-group for Doctor/Assistant based on current user
+    const rescheduleGrpSel = document.getElementById("reschedule-group");
+    rescheduleGrpSel.innerHTML = "";
+    if (currentUser.role === 'doctor') {
+        rescheduleGrpSel.innerHTML = `<option value="1">جروب 1</option><option value="2">جروب 2</option>`;
+    } else {
+        let uniqueGroups = new Set();
+        currentUser.lectures.forEach(l => uniqueGroups.add(l.group));
+        uniqueGroups.forEach(g => {
+            rescheduleGrpSel.innerHTML += `<option value="${g}">سكشن ${g}</option>`;
         });
     }
+
 }
 
-// === خاصية كشف التعارض والوقت ===
 function checkConflict(day, time, place) {
     let allStaff = {...teachersDB, ...assistantsDB};
+    // Check fixed schedules
     for (let tId in allStaff) {
         let t = allStaff[tId];
         for (let l of t.lectures) {
             if (l.day === day && l.time === time && l.place === place) return true;
         }
     }
+    // Check overrides (reschedules)
     let overrides = JSON.parse(localStorage.getItem("smart_overrides"));
     for (let o of overrides) {
         if (o.newDay === day && o.newTime === time && o.newPlace === place) return true;
@@ -1115,23 +1201,36 @@ function staffReschedule(){
     let newPlace = document.getElementById("reschedule-place").value;
     let targetGroup = document.getElementById("reschedule-group").value;
 
+    if (!newTime || !newPlace) {
+        Swal.fire("بيانات ناقصة!", "يجب إدخال الوقت والمكان الجديدين.", "warning");
+        return;
+    }
+
+    // Assuming 'group' here refers to the actual section number for assistants or Group 1/2 for doctors.
+    let groupLabel = currentUser.role === 'doctor' ? `جروب ${targetGroup}` : `سكشن ${targetGroup}`;
+    let subjectLabel = currentUser.role === 'doctor' ? `محاضرة ${currentUser.subject}` : `سكشن ${currentUser.subject}`;
+    
+    // Conflict check logic remains the same
     if(checkConflict(newDay, newTime, newPlace)){
         Swal.fire("تعارض!", `القاعة ${newPlace} مشغولة يوم ${newDay} الساعة ${newTime}`, "error");
         return;
     }
 
     let overrides = JSON.parse(localStorage.getItem("smart_overrides"));
-    
+    // Remove any existing reschedule for the same subject and group
     overrides = overrides.filter(o => !(o.subject === currentUser.subject && o.group === targetGroup));
+    
+    // Find the original lecture/section details to be overridden
+    // This part is a simplification. We'll just store the target group.
     overrides.push({
         id: Date.now() + Math.random(),
         subject: currentUser.subject,
         doctor: currentUser.name,
-        group: targetGroup,
+        group: targetGroup, // Stores section number for assistant, or 1/2 for doctor
         newDay: newDay,
         newTime: newTime,
         newPlace: newPlace,
-        isMerged: false
+        isMerged: false // For future use
     });
 
     localStorage.setItem("smart_overrides", JSON.stringify(overrides));
@@ -1141,9 +1240,11 @@ function staffReschedule(){
         id: Date.now(),
         type: "note",
         subject: currentUser.subject,
-        desc: `تم تعديل الموعد: يوم ${newDay} الساعة ${newTime} في ${newPlace}`,
+        // Include group in the description for clarity
+        desc: `**تعديل موعد** لـ ${subjectLabel} ${groupLabel}: تم التعديل إلى يوم ${newDay} الساعة ${newTime} في ${newPlace}`,
         date: new Date().toISOString().split('T')[0],
-        author: currentUser.name
+        author: currentUser.name,
+        targetGroup: targetGroup // Add target group for filtering on student side if needed
     });
     localStorage.setItem("smart_posts", JSON.stringify(posts));
 
@@ -1154,9 +1255,22 @@ function staffReschedule(){
 function staffCancel(){
     let day = document.getElementById("staff-cancel-day").value;
     let group = document.getElementById("staff-cancel-group").value;
+    
+    if (!day || !group) {
+        Swal.fire("بيانات ناقصة!", "الرجاء اختيار اليوم والجروب/السكشن للإلغاء.", "warning");
+        return;
+    }
+
     let posts = JSON.parse(localStorage.getItem("smart_posts"));
 
-    posts.push({id:Date.now(), type:"cancel", subject:currentUser.subject, day:day, group:group, author:currentUser.name});
+    posts.push({
+        id:Date.now(), 
+        type:"cancel", 
+        subject:currentUser.subject, 
+        day:day, 
+        group:group, // This is the section number for assistants, or 1/2 for doctors
+        author:currentUser.name
+    });
     localStorage.setItem("smart_posts",JSON.stringify(posts));
     
     Toastify({text: "تم إلغاء المحاضرة", backgroundColor: "#ef4444"}).showToast();
@@ -1167,29 +1281,51 @@ function staffAddTask(){
     let type = document.getElementById("task-type").value;
     let desc = document.getElementById("task-desc").value;
     let date = document.getElementById("task-date").value;
+    // For posts, we'll assume it's for all groups/sections of this staff member unless specific groups are added later
+    // For simplicity, we won't add group filtering on post creation yet
 
     if(!desc) return Swal.fire("تنبيه","أدخل وصفاً للمهمة","warning");
+    if(type !== "note" && !date) return Swal.fire("تنبيه", "يجب تحديد تاريخ تسليم/موعد لـ Task/Quiz/Exam", "warning");
 
     let posts = JSON.parse(localStorage.getItem("smart_posts"));
-    posts.push({id:Date.now(), type:type, subject:currentUser.subject, desc:desc, date:date, author:currentUser.name});
+    posts.push({
+        id:Date.now(), 
+        type:type, 
+        subject:currentUser.subject, 
+        desc:desc, 
+        date:date, 
+        author:currentUser.name,
+        // Assuming posts apply to all sections/groups associated with this staff member for simplicity
+        targetGroups: currentUser.lectures.map(l => l.group)
+    });
     localStorage.setItem("smart_posts",JSON.stringify(posts));
     
     Toastify({text: "تم النشر بنجاح", backgroundColor: "#10b981"}).showToast();
     document.getElementById("task-desc").value = "";
+    document.getElementById("task-date").value = "";
     renderStaffPosts();
 }
 
 function updateSectionStatus() {
+    // This function is primarily for Assistants (المعيد)
+    if (currentUser.role !== 'assistant') return;
+
     let status = document.getElementById("section-status-type").value;
-    let group = document.getElementById("status-group").value;
+    let group = document.getElementById("status-group").value; // Section number for assistant
     
+    if (!group) {
+        Swal.fire("تنبيه", "الرجاء اختيار رقم السكشن لتحديث حالته.", "warning");
+        return;
+    }
+
     let statuses = JSON.parse(localStorage.getItem("smart_section_status"));
+    // Filter statuses for the *current* assistant and the *specific section*
     statuses = statuses.filter(s => !(s.author === currentUser.name && s.group === group));
     
     statuses.push({
         author: currentUser.name,
-        subject: currentUser.subject,
-        group: group,
+        subject: currentUser.subject, // e.g., "سكشن IT"
+        group: group, // Section number
         status: status,
         timestamp: Date.now()
     });
@@ -1199,17 +1335,19 @@ function updateSectionStatus() {
     let posts = JSON.parse(localStorage.getItem("smart_posts"));
     let statusText = status === "Online" ? "أونلاين (عن بعد)" : (status === "Cancelled" ? "ملغي" : "في الكلية (Offline)");
     
+    // Also post a note about the status change
     posts.push({
         id: Date.now(),
         type: "note",
         subject: currentUser.subject,
-        desc: `تحديث حالة السكشن: ${statusText}`,
+        desc: `تحديث حالة سكشن رقم ${group} لـ ${statusText}`,
         date: new Date().toISOString().split('T')[0],
-        author: currentUser.name
+        author: currentUser.name,
+        targetGroup: group // Target specific section/group
     });
     localStorage.setItem("smart_posts", JSON.stringify(posts));
     
-    Toastify({text: `تم تغيير الحالة إلى ${status}`, backgroundColor: "#8b5cf6"}).showToast();
+    Toastify({text: `تم تغيير حالة سكشن ${group} إلى ${status}`, backgroundColor: "#8b5cf6"}).showToast();
     renderStaffPosts();
 }
 
@@ -1224,43 +1362,45 @@ function renderStaffPosts(){
 
     myPosts.forEach(p=>{
         let labelHTML = "";
-        if(p.type === "quiz") labelHTML = `<span class="tag tag-quiz">Quiz</span>`;
-        else if(p.type === "task") labelHTML = `<span class="tag tag-task">Task</span>`;
-        else if(p.type === "exam") labelHTML = `<span class="tag tag-exam">Exam</span>`;
-        else if(p.type === "cancel") labelHTML = `<span class="tag" style="background:#fee2e2; color:red">إلغاء</span>`;
+        let description = p.desc;
+        let postSubject = p.subject;
+
+        if(p.type === "quiz") labelHTML = `<span class="tag" style="background:#fee2e2; color:#dc2626">Quiz (تسليم: ${p.date})</span>`;
+        else if(p.type === "exam") labelHTML = `<span class="tag" style="background:#fef3c7; color:#d97706">Exam (موعد: ${p.date})</span>`;
+        else if(p.type === "task") labelHTML = `<span class="tag" style="background:#dbeafe; color:#2563eb">Task (تسليم: ${p.date})</span>`;
+        else if(p.type === "cancel") {
+            labelHTML = `<span class="tag" style="background:#fee2e2; color:red">إلغاء</span>`;
+            // The group/section number is stored in p.group for cancellation posts
+            description = `${currentUser.role === 'doctor' ? 'محاضرة' : 'سكشن'} ${p.subject} ليوم ${p.day} لـ ${currentUser.role === 'doctor' ? 'جروب ' : 'سكشن '}${p.group}`;
+        }
 
         let subListHTML = "";
         if(p.type === "task") {
             let mySubs = submissions.filter(s => s.taskId === p.id);
             if(mySubs.length > 0) {
-                subListHTML = `<div class="submissions-list"><strong><i class="fa-solid fa-file-arrow-down"></i> الاستلامات (${mySubs.length}):</strong>`;
+                subListHTML = `<div style="margin-top:10px; padding:10px; background:#f0f4f8; border-radius:8px; color:#1e293b; text-align:right;"><strong><i class="fa-solid fa-file-arrow-down"></i> الاستلامات (${mySubs.length}):</strong>`;
                 mySubs.forEach(s => {
                     subListHTML += `
-                    <div class="sub-item">
-                        <div>
-                            <span>${s.studentName} (${s.studentId})</span><br>
-                            <small style="color:#64748b">${s.time}</small>
-                        </div>
-                        <button class="btn-view-file" onclick="viewFile('${s.fileData}')">معاينة</button>
+                    <div style="display:flex; justify-content:space-between; margin-top:5px; padding:5px; background:white; border-bottom:1px solid #eee;">
+                        <span style="font-size:0.9rem;">${s.studentName}</span>
+                        <button onclick="viewFile('${s.fileData}')" style="background:none; border:1px solid #4338ca; color:#4338ca; padding:2px 8px; border-radius:4px; cursor:pointer; font-size:0.8rem;">معاينة</button>
                     </div>`;
                 });
                 subListHTML += `</div>`;
             } else {
-                subListHTML = `<div style="margin-top:10px; font-size:0.85rem; color:#64748b">لم يتم التسليم من أي طالب بعد</div>`;
+                subListHTML = `<p style="margin-top:10px; color:#94a3b8;">لم يتم استلام أي ملفات بعد.</p>`;
             }
         }
-
+        
+        // Render post HTML
         box.innerHTML+=`
-            <div class="schedule-row ${p.type==='cancel'?'cancelled':''}" style="display:flex">
-                <div class="row-header">
+            <div class="schedule-row">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
                     <div>
-                        <div style="display:flex; align-items:center; margin-bottom:5px;">
-                            ${labelHTML}
-                            <b>${p.subject}</b>
-                        </div>
-                        <span style="display:block; margin-top:5px; color:#334155">${p.desc || (p.day + " - جروب/سكشن " + p.group)}</span>
+                        <b>${postSubject}</b> ${labelHTML}
+                        <div style="color:#666; margin-top:5px; font-size:1rem; line-height:1.4;">${description}</div>
                     </div>
-                    <button class="btn btn-danger" onclick="deletePost(${p.id})"><i class="fa-solid fa-trash"></i></button>
+                    <button onclick="deletePost(${p.id})" style="background:none; border:none; color:#dc2626; padding:5px 10px; border-radius:5px; cursor:pointer;"><i class="fa-solid fa-trash"></i></button>
                 </div>
                 ${subListHTML}
             </div>
@@ -1269,20 +1409,38 @@ function renderStaffPosts(){
 }
 
 function deletePost(id){
-    let posts = JSON.parse(localStorage.getItem("smart_posts"));
-    posts = posts.filter(p=>p.id!==id);
-    localStorage.setItem("smart_posts",JSON.stringify(posts));
-    renderStaffPosts();
+    Swal.fire({
+        title: 'تأكيد الحذف',
+        text: 'هل أنت متأكد من حذف هذا المنشور؟',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'نعم، احذف',
+        cancelButtonText: 'إلغاء',
+        confirmButtonColor: '#dc2626',
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Delete Post
+            let posts = JSON.parse(localStorage.getItem("smart_posts"));
+            posts = posts.filter(p=>p.id!==id);
+            localStorage.setItem("smart_posts",JSON.stringify(posts));
+            // Also delete related overrides and statuses (if applicable, only deletion is simple here)
+            // For full functionality, deleting a post might need to clear related items, but we'll skip for now.
+            renderStaffPosts();
+            Toastify({text: "تم حذف المنشور بنجاح", backgroundColor: "#dc2626"}).showToast();
+        }
+    });
 }
 
 function viewFile(base64Data) {
+    // Check if data is a known type (e.g., image, PDF)
+    // This is a simple implementation, actual file viewing might be more complex
     let win = window.open();
     win.document.write('<iframe src="' + base64Data + '" frameborder="0" style="border:0; top:0px; left:0px; bottom:0px; right:0px; width:100%; height:100%;" allowfullscreen></iframe>');
 }
 
 // ===================== STUDENT LOGIC ============================
 function showStudent(){
-    document.getElementById("login-screen").style.display="none";
+    document.getElementById("landing-container").style.display="none";
     document.getElementById("student-dashboard").style.display="block";
     
     // Set Student Info
@@ -1293,6 +1451,11 @@ function showStudent(){
     let sectionSelect = document.getElementById("stu-section");
     sectionSelect.value = currentUser.section;
     
+    // Automatically load today's schedule on load (optional, keeping original behavior for now)
+    // let today = new Date().toLocaleDateString('ar-EG', { weekday: 'long' });
+    // document.getElementById("stu-day").value = today;
+    // updateStudentSchedule();
+    
     renderStudentPosts();
 }
 
@@ -1301,9 +1464,12 @@ function updateStudentSchedule(){
     let day = document.getElementById("stu-day").value;
     let box = document.getElementById("stu-schedule");
 
-    if(!sec || !day) return;
+    if(!sec || !day) {
+        box.innerHTML="<div style='text-align:center; padding:30px; background:#f8fafc; border:2px dashed #cbd5e1; border-radius:10px;'><p style='color:#64748b;'>الرجاء اختيار اليوم</p></div>";
+        return;
+    }
 
-    let group = groupFromSection(sec); // يحسب 1 أو 2 للدكاترة
+    let group = groupFromSection(sec); 
     let posts = JSON.parse(localStorage.getItem("smart_posts"));
     let overrides = JSON.parse(localStorage.getItem("smart_overrides"));
     let sectionStatuses = JSON.parse(localStorage.getItem("smart_section_status"));
@@ -1313,15 +1479,15 @@ function updateStudentSchedule(){
 
     Object.values(allStaff).forEach(t=>{
         t.lectures.forEach(l=>{
-            
-            // تحديد اذا كان هذا العنصر يخص الطالب
             let isForStudent = false;
-            if(t.role === 'doctor' && l.group === group) isForStudent = true; // محاضرة عامة
-            if(t.role === 'assistant' && l.group === sec) isForStudent = true; // سكشن خاص
+            // Match lecture/section to the student's group/section
+            if(t.role === 'doctor' && l.group === group) isForStudent = true; 
+            if(t.role === 'assistant' && l.group === sec) isForStudent = true; 
 
             if(isForStudent){
-                // البحث عن تعديلات
-                let override = overrides.find(o => o.subject === t.subject && (o.group === group || o.group === sec));
+                let override = overrides.find(o => 
+                    o.subject === t.subject && (o.group === (t.role === 'doctor' ? group : sec))
+                );
                 
                 let activeDay = override ? override.newDay : l.day;
                 let activeTime = override ? override.newTime : l.time;
@@ -1329,19 +1495,32 @@ function updateStudentSchedule(){
                 let isModified = !!override;
 
                 if(activeDay === day){
-                    let cancelled = posts.some(p=>p.type==="cancel" && p.subject===t.subject && p.day===day && (p.group===group || p.group===sec));
+                    // Check for global cancellation post on this day and group/section
+                    let cancelledPost = posts.some(p => 
+                        p.type === "cancel" && 
+                        p.subject === t.subject && 
+                        p.day === day && 
+                        (p.group === group || p.group === sec)
+                    );
                     
-                    let statusObj = sectionStatuses.find(s => s.subject === t.subject && (s.group === group || s.group === sec));
+                    // Check for immediate section status update (only for assistants/sections)
+                    let statusObj = sectionStatuses.find(s => 
+                        s.subject === t.subject && 
+                        s.group === sec
+                    );
                     let currentStatus = statusObj ? statusObj.status : "Offline"; 
                     
-                    if(currentStatus === "Cancelled") cancelled = true;
+                    // If staff set status to Cancelled, it overrides any schedule info
+                    let isCancelled = cancelledPost || (currentStatus === "Cancelled");
+                    
+                    // If lecture is moved to another day via override, ensure it's removed from old day
 
                     todayLectures.push({ 
                         subject: t.subject, 
                         doctor: t.name, 
                         time: activeTime, 
                         place: activePlace, 
-                        cancelled: cancelled,
+                        cancelled: isCancelled,
                         modified: isModified,
                         status: currentStatus,
                         type: t.role === 'doctor' ? 'Lecture' : 'Section'
@@ -1351,55 +1530,94 @@ function updateStudentSchedule(){
         });
     });
 
+    // We also need to check for lectures that were originally on other days but rescheduled to today
+    overrides.forEach(o => {
+        // Only look for overrides targeting this student's group or section
+        if (o.group === group || o.group === sec) {
+            if (o.newDay === day) {
+                // Check if this override has replaced a specific day/time lecture
+                // We need to check if this rescheduled time is *already* in todayLectures
+                let isAlreadyAdded = todayLectures.some(l => 
+                    l.subject === o.subject && 
+                    l.time === o.newTime && 
+                    l.place === o.newPlace
+                );
+
+                if (!isAlreadyAdded) {
+                    // Get the staff member info for the subject
+                    let staff = Object.values(allStaff).find(t => t.subject === o.subject && (t.lectures.some(l => l.group === o.group)));
+                    if (staff) {
+                        let isCancelled = posts.some(p => 
+                            p.type === "cancel" && 
+                            p.subject === staff.subject && 
+                            p.day === day && 
+                            (p.group === group || p.group === sec)
+                        );
+                        todayLectures.push({
+                            subject: staff.subject,
+                            doctor: staff.name,
+                            time: o.newTime,
+                            place: o.newPlace,
+                            cancelled: isCancelled,
+                            modified: true,
+                            status: "Offline", // Status tracking is only for live section changes.
+                            type: staff.role === 'doctor' ? 'Lecture' : 'Section'
+                        });
+                    }
+                }
+            }
+        }
+    });
+
+    todayLectures.sort((a,b) => a.time.localeCompare(b.time));
+
     if(todayLectures.length===0){
         box.innerHTML="<div style='text-align:center; padding:30px; background:#f1f5f9; border-radius:16px;'>✨ لا توجد محاضرات لهذا اليوم</div>";
-        renderStudentPosts();
+        renderStudentPosts(); // Still update posts just in case.
         return;
     }
-
-    // ترتيب المحاضرات حسب الوقت (اختياري)
-    todayLectures.sort((a,b) => a.time.localeCompare(b.time));
 
     box.innerHTML="";
     todayLectures.forEach(l=>{
         let statusBadge = "";
-        let rowClass = "";
-        let typeBadge = l.type === 'Lecture' ? '<span class="tag" style="background:#e0f2fe; color:#0369a1">محاضرة</span>' : '<span class="tag" style="background:#f0fdf4; color:#15803d">سكشن</span>';
-
+        let rowStyle = "";
+        let subjectTitle = l.subject;
+        
         if(l.cancelled) {
-            statusBadge = '<span style="color:var(--danger); font-weight:bold;"><i class="fa-solid fa-ban"></i> ملغية</span>';
-            rowClass = "cancelled";
+            statusBadge = '<span style="color:red; font-weight:bold;"><i class="fa-solid fa-ban"></i> ملغية</span>';
+            rowStyle = "border-right: 5px solid red; background:#fff5f5;";
         }
         else if(l.status === "Online") {
-            statusBadge = '<span class="tag" style="background:#8b5cf6; color:white;"><i class="fa-solid fa-wifi"></i> Online</span>';
-            rowClass = "online-section";
+            statusBadge = '<span style="background:#8b5cf6; color:white; padding:2px 8px; border-radius:4px;">Online</span>';
+            rowStyle = "border-right: 5px solid #8b5cf6; background:#f5f3ff;";
         }
         else if(l.modified) {
-            statusBadge = '<span style="color:var(--warning); font-weight:bold;"><i class="fa-solid fa-pen"></i> تم تعديل الميعاد</span>';
-            rowClass = "modified-time";
+            statusBadge = '<span style="color:#f59e0b; font-weight:bold;"><i class="fa-solid fa-triangle-exclamation"></i> تم التعديل</span>';
+            rowStyle = "border-right: 5px solid #f59e0b; background:#fffdf7;";
         }
 
         let displayPlace = l.status === "Online" ? "Microsoft Teams / Zoom" : l.place;
+        let typeLabel = l.type === 'Lecture' ? 'محاضرة' : 'سكشن';
+        
+        // If it's a section, add the section number to the title
+        if (l.type === 'Section') {
+            subjectTitle += ` (سكشن ${sec})`;
+        }
 
         box.innerHTML+=`
-        <div class="schedule-row ${rowClass}">
-            <div style="width:100%">
-                <div style="display:flex; justify-content:space-between;">
-                    <div style="display:flex; align-items:center">
-                        ${typeBadge}
-                        <b>${l.subject}</b>
+        <div class="schedule-row" style="${rowStyle}">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                    <b>${subjectTitle}</b> <small style="color:#666">(${typeLabel})</small>
+                    <div style="margin-top:5px; color:#444;">
+                        <i class="fa-regular fa-clock"></i> ${l.time} | 
+                        <i class="fa-solid fa-location-dot"></i> ${displayPlace}
                     </div>
-                    ${statusBadge}
                 </div>
-                
-                <div class="meta-info">
-                    <span><i class="fa-regular fa-clock"></i> ${l.time}</span>
-                    <span><i class="fa-solid fa-location-dot"></i> ${displayPlace}</span>
-                </div>
-                
-                <div style="margin-top:12px; padding-top:10px; border-top:1px solid #f1f5f9; font-size:0.95rem; color:var(--primary);">
-                    <i class="fa-solid fa-chalkboard-user"></i> ${l.doctor}
-                </div>
+                <div>${statusBadge}</div>
+            </div>
+            <div style="margin-top:10px; color:#4338ca; font-size:0.9rem;">
+                <i class="fa-solid fa-chalkboard-user"></i> ${l.doctor}
             </div>
         </div>`;
     });
@@ -1413,53 +1631,75 @@ function renderStudentPosts(){
     let box = document.getElementById("stu-posts");
     box.innerHTML="";
 
-    let activePosts = posts.filter(p=>p.type!=="cancel").reverse();
+    let studentSection = currentUser.section.toString();
+    let studentGroup = currentUser.group.toString();
+
+    // Filter posts: Show non-cancellation posts that are either general (no specific targetGroup) 
+    // or specifically target the student's group (1/2 for doctor posts) or section (for assistant posts).
+    let activePosts = posts.filter(p => {
+        // Hide cancellation posts, as cancellations are handled in the schedule view.
+        if (p.type === "cancel") return false; 
+        
+        // Check if the staff member is associated with this student's subject (simplification)
+        // We assume any post from a doctor/assistant of a subject the student takes is relevant.
+        // We'll rely on the targetGroup property for more specific targeting if it exists.
+        
+        // If targetGroup is defined, check if it matches the student's section or main group
+        if (p.targetGroup) {
+            // If the post targets a section number (e.g., "1" to "13")
+            if (p.targetGroup === studentSection) return true;
+            // If the post targets a main group number (e.g., "1" or "2" from a doctor)
+            if (p.targetGroup === studentGroup) return true;
+            return false; // If targetGroup is set but doesn't match, hide it.
+        }
+
+        // If no specific targetGroup, display it as a general post from one of the student's staff (simple approach)
+        return true;
+    }).reverse();
+
     if(activePosts.length===0) box.innerHTML = "<p style='text-align:center; color:#94a3b8'>لا توجد تنبيهات جديدة</p>";
 
     activePosts.forEach(p=>{
         let icon = "fa-bell";
-        let color = "var(--primary)";
-        let tag = "";
+        let color = "#4338ca"; // Blue for notes
+        let footerText = `بواسطة: ${p.author}`;
         
-        if(p.type === "quiz") { icon = "fa-stopwatch"; color = "#dc2626"; tag = "Quiz"; }
-        else if(p.type === "task") { icon = "fa-list-check"; color = "#2563eb"; tag = "Task"; }
-        else if(p.type === "exam") { icon = "fa-file-signature"; color = "#d97706"; tag = "Exam"; }
-        else if(p.type === "note") { icon = "fa-info-circle"; color = "#059669"; tag = "تنبيه"; }
+        if(p.type === "quiz") { icon = "fa-stopwatch"; color = "#dc2626"; footerText = `الموعد النهائي/الاختبار: ${p.date}`; }
+        else if(p.type === "exam") { icon = "fa-pencil"; color = "#d97706"; footerText = `موعد الامتحان: ${p.date}`; }
+        else if(p.type === "task") { icon = "fa-list-check"; color = "#2563eb"; footerText = `الموعد النهائي للتسليم: ${p.date}`; }
 
         let actionBtn = "";
         if(p.type === "task"){
             let isSubmitted = submissions.some(s => s.taskId === p.id && s.studentId === currentUser.id);
+            
+            // Check submission deadline (simple date comparison)
+            let isLate = p.date && (new Date(p.date) < new Date());
+            let deadlineInfo = isLate ? `<span style="color:red; font-weight:bold; margin-left:10px;">(متأخر!)</span>` : '';
+
             if(isSubmitted){
-                actionBtn = `<div class="done-badge">✅ تم التسليم</div>`;
+                actionBtn = `<div style="color:green; font-weight:bold; margin-top:10px;">✅ تم التسليم</div>`;
             } else {
                 actionBtn = `
-                <div class="upload-area">
-                    <label style="cursor:pointer; display:block">
+                <div style="margin-top:10px; border:2px dashed #cbd5e1; padding:10px; text-align:center;">
+                    <label style="cursor:pointer; color:#4338ca; font-weight:bold;">
                         <input type="file" id="file-${p.id}" style="display:none" onchange="uploadTask(${p.id})">
-                        <i class="fa-solid fa-cloud-arrow-up" style="font-size:2rem; color:#94a3b8"></i><br>
-                        اضغط هنا لرفع الملف
+                        <i class="fa-solid fa-cloud-arrow-up"></i> رفع الملف
                     </label>
                 </div>`;
             }
         }
         
         box.innerHTML+=`
-            <div class="schedule-row" style="border-right-color:${color}">
-                <div style="width:100%">
-                    <div style="display:flex; justify-content:space-between; align-items:center">
-                        <b style="color:${color}; display:flex; align-items:center; gap:8px;">
-                            <i class="fa-solid ${icon}"></i> ${tag}: ${p.subject}
-                        </b>
-                        <span style="font-size:0.85rem; background:#f1f5f9; padding:4px 10px; border-radius:6px; color:#475569;">
-                            <i class="fa-regular fa-calendar"></i> ${p.date || "بدون تاريخ"}
-                        </span>
-                    </div>
-                    <p style="margin:12px 0; font-size:1.05rem; color:#334155; line-height:1.6">${p.desc}</p>
-                    
-                    <div style="margin-top:15px; border-top:1px solid #f1f5f9; padding-top:10px;">
-                        ${actionBtn}
-                        <div style="font-size:0.8rem; color:#94a3b8; margin-top:5px;"><i class="fa-solid fa-user-pen"></i> ${p.author}</div>
-                    </div>
+            <div class="schedule-row" style="border-right-color:${color}; background:white;">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <b style="color:${color}"><i class="fa-solid ${icon}"></i> ${p.subject}</b>
+                    <span style="font-size:0.8rem; color:#666">${p.date || ""}</span>
+                </div>
+                <p style="margin:10px 0; font-size:1rem; line-height:1.5;">${p.desc}</p>
+                ${actionBtn}
+                <div style="font-size:0.8rem; color:#999; margin-top:10px; border-top:1px solid #eee; padding-top:5px; display:flex; justify-content:space-between;">
+                    <span>بواسطة: ${p.author}</span>
+                    <span>${p.targetGroup ? (p.targetGroup.length > 2 ? `سكشن ${p.targetGroup}` : `جروب ${p.targetGroup}`) : 'عام'}</span>
                 </div>
             </div>
         `;
@@ -1480,6 +1720,9 @@ function uploadTask(taskId){
         let now = new Date();
         let timeString = now.toLocaleDateString('ar-EG') + ' ' + now.toLocaleTimeString('ar-EG');
         
+        // Remove any existing submission for this task and student (to allow re-submission)
+        submissions = submissions.filter(s => !(s.taskId === taskId && s.studentId === currentUser.id));
+
         submissions.push({
             taskId: taskId,
             studentId: currentUser.id,
@@ -1502,10 +1745,9 @@ function logout(){
         text: 'هل أنت متأكد؟',
         icon: 'warning',
         showCancelButton: true,
-        confirmButtonColor: '#4338ca',
-        cancelButtonColor: '#ef4444',
         confirmButtonText: 'نعم',
-        cancelButtonText: 'إلغاء'
+        cancelButtonText: 'إلغاء',
+        reverseButtons: true
     }).then((result) => {
         if (result.isConfirmed) {
             location.reload();
